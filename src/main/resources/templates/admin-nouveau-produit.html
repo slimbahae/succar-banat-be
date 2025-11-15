@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Nouveau Produit</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            line-height: 1.5;
+            color: #2d3748;
+            background-color: #f7fafc;
+            margin: 0;
+            padding: 20px;
+            font-size: 14px;
+        }
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid #e2e8f0;
+        }
+        .header {
+            background: #48bb78;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 18px;
+            font-weight: 500;
+        }
+        .produit-nom {
+            font-size: 20px;
+            font-weight: 600;
+            margin: 10px 0 5px 0;
+        }
+        .produit-prix {
+            font-size: 24px;
+            font-weight: 600;
+            margin: 5px 0;
+        }
+        .ajout-par {
+            font-size: 12px;
+            opacity: 0.9;
+        }
+        .section {
+            padding: 20px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .section:last-child {
+            border-bottom: none;
+        }
+        .image-produit {
+            text-align: center;
+            margin: 15px 0;
+        }
+        .image-produit img {
+            max-width: 120px;
+            height: auto;
+            border-radius: 6px;
+            border: 1px solid #e2e8f0;
+        }
+        .details {
+            background: #f7fafc;
+            border-radius: 6px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        .row {
+            display: flex;
+            justify-content: space-between;
+            margin: 8px 0;
+            padding: 5px 0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .row:last-child {
+            border-bottom: none;
+        }
+        .label {
+            color: #718096;
+            font-size: 13px;
+            font-weight: 500;
+        }
+        .value {
+            font-weight: 500;
+            color: #2d3748;
+        }
+        .description {
+            background: #edf2f7;
+            border-left: 3px solid #4299e1;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 0 6px 6px 0;
+            font-size: 13px;
+            color: #4a5568;
+        }
+        .tags {
+            margin: 15px 0;
+        }
+        .tag {
+            display: inline-block;
+            background: #bee3f8;
+            color: #2b6cb0;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            margin: 2px;
+            font-weight: 500;
+        }
+        .status {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 500;
+            text-transform: uppercase;
+        }
+        .status-actif {
+            background: #c6f6d5;
+            color: #22543d;
+        }
+        .status-vedette {
+            background: #fef5e7;
+            color: #744210;
+        }
+        .ajout-info {
+            background: #fffbeb;
+            border-left: 3px solid #f6ad55;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 0 6px 6px 0;
+        }
+        .ajout-info h3 {
+            margin: 0 0 8px 0;
+            font-size: 13px;
+            color: #744210;
+            font-weight: 500;
+        }
+        .ajout-info p {
+            margin: 0;
+            color: #744210;
+            font-size: 13px;
+        }
+        .actions {
+            text-align: center;
+            padding: 20px;
+            background: #f7fafc;
+        }
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            margin: 0 5px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 500;
+        }
+        .btn-primary {
+            background: #48bb78;
+            color: white;
+        }
+        .btn-secondary {
+            background: #718096;
+            color: white;
+        }
+        .footer {
+            text-align: center;
+            padding: 15px;
+            background: #2d3748;
+            color: #a0aec0;
+            font-size: 11px;
+        }
+        @media (max-width: 600px) {
+            .row {
+                font-size: 13px;
+            }
+            .produit-nom {
+                font-size: 18px;
+            }
+            .produit-prix {
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>Nouveau Produit Ajouté</h1>
+        <div class="produit-nom" th:text="${product.name}">Sérum Anti-Âge</div>
+        <div class="produit-prix" th:text="${productPrice}">49,90 €</div>
+        <div class="ajout-par" th:text="'Ajouté par: ' + ${addedByUser}">Ajouté par: admin@beautycenter.com</div>
+    </div>
+
+    <div class="section">
+        <div class="image-produit" th:if="${product.imageUrls != null and !product.imageUrls.isEmpty()}">
+            <img th:src="${product.imageUrls[0]}" alt="Image produit" />
+        </div>
+
+        <div class="details">
+            <div class="row">
+                <span class="label">Catégorie</span>
+                <span class="value" th:text="${product.category}">Soins Visage</span>
+            </div>
+            <div class="row">
+                <span class="label">Prix</span>
+                <span class="value" th:text="${productPrice}">49,90 €</span>
+            </div>
+            <div class="row">
+                <span class="label">Stock</span>
+                <span class="value" th:text="${product.stockQuantity} + ' unités'">25 unités</span>
+            </div>
+            <div class="row" th:if="${product.brand}">
+                <span class="label">Marque</span>
+                <span class="value" th:text="${product.brand}">LuxBeauty</span>
+            </div>
+            <div class="row" th:if="${product.sku}">
+                <span class="label">Référence</span>
+                <span class="value" th:text="${product.sku}">SKU-001</span>
+            </div>
+            <div class="row">
+                <span class="label">Statut</span>
+                <span>
+                        <span th:if="${product.active}" class="status status-actif">Actif</span>
+                        <span th:if="${product.featured}" class="status status-vedette">Vedette</span>
+                    </span>
+            </div>
+        </div>
+
+        <div th:if="${product.description}" class="description">
+            <strong>Description:</strong><br>
+            <span th:text="${product.description}">Sérum anti-âge avec acide hyaluronique pour une peau plus ferme et éclatante.</span>
+        </div>
+
+        <div th:if="${product.tags != null and !product.tags.isEmpty()}" class="tags">
+            <strong>Étiquettes:</strong><br>
+            <span th:each="tag : ${product.tags}" class="tag" th:text="${tag}">anti-âge</span>
+        </div>
+
+        <div class="ajout-info">
+            <h3>Informations d'ajout</h3>
+            <p><strong>Utilisateur:</strong> <span th:text="${addedByUser}">admin@beautycenter.com</span></p>
+            <p><strong>Date:</strong> <span th:text="${#dates.format(product.createdAt, 'dd/MM/yyyy à HH:mm')}">17/06/2025 à 14:30</span></p>
+        </div>
+    </div>
+
+    <div class="actions">
+        <a href="#" class="btn btn-primary">Voir</a>
+        <a href="#" class="btn btn-secondary">Modifier</a>
+    </div>
+
+    <div class="footer">
+        <p th:text="${businessName} + ' - Notification automatique'">Beauty Center - Notification automatique</p>
+    </div>
+</div>
+</body>
+</html>

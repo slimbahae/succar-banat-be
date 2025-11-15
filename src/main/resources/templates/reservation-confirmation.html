@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Reservation Confirmed!</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+            overflow: hidden;
+        }
+        .header {
+            text-align: center;
+            padding: 30px 20px;
+            background-color: #f8f9fa;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        .header h1 {
+            font-size: 28px;
+            color: #212121;
+            margin-bottom: 10px;
+        }
+        .header p {
+            font-size: 16px;
+            color: #555;
+        }
+        .reservation-id-box {
+            background-color: #fff;
+            border-radius: 6px;
+            padding: 15px 25px;
+            margin: 20px auto;
+            display: inline-block;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .reservation-id-box p {
+            margin: 0;
+            font-size: 14px;
+            color: #888;
+        }
+        .reservation-id-box strong {
+            font-size: 24px;
+            color: #6a1b9a; /* Primary color hint */
+            display: block;
+        }
+        .section {
+            padding: 20px;
+            border-bottom: 1px solid #eee;
+        }
+        .section:last-child {
+            border-bottom: none;
+        }
+        h2 {
+            font-size: 20px;
+            color: #212121;
+            margin-top: 0;
+            margin-bottom: 15px;
+        }
+        .details-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+        }
+        .details-grid p {
+            margin: 0;
+            font-size: 15px;
+            color: #555;
+        }
+        .details-grid strong {
+            color: #212121;
+        }
+        .footer-text {
+            text-align: center;
+            margin-top: 30px;
+            font-size: 12px;
+            color: #888;
+        }
+        .button {
+            display: inline-block;
+            padding: 12px 25px;
+            background-color: #6a1b9a;
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-top: 25px;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        .icon-circle {
+            width: 60px;
+            height: 60px;
+            background-color: #e8f5e9; /* Light green */
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+        }
+        .icon-circle svg {
+            width: 36px;
+            height: 36px;
+            color: #4CAF50; /* Green */
+        }
+        .text-green {
+            color: #4CAF50;
+        }
+        .text-purple {
+            color: #6a1b9a;
+        }
+        /* Lucide Icons - simple SVG fallback for email clients */
+        .lucide-icon {
+            width: 20px;
+            height: 20px;
+            vertical-align: middle;
+            margin-right: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="icon-circle">
+                <svg class="lucide-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><path d="m9 11 3 3L22 4"></path></svg>
+            </div>
+            <h1>Reservation Confirmed! 🎉</h1>
+            <p th:text="'Thank you for booking with Beauty Center, ' + ${reservation.customerName} + '!'"></p>
+            <div class="reservation-id-box">
+                <p>Reservation ID</p>
+                <strong th:text="'#' + ${reservation.id.substring(reservation.id.length() - 8)}">#12345678</strong>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>Reservation Details</h2>
+            <div class="details-grid">
+                <p><strong>Service:</strong> <span th:text="${reservation.serviceName}">Service Name</span></p>
+                <p><strong>Date:</strong> <span th:text="${reservationDateFormatted}">Date</span></p>
+                <p><strong>Time Slot:</strong> <span th:text="${reservation.timeSlot}">Time Slot</span></p>
+                <p><strong>Staff Member:</strong> <span th:text="${reservation.staffName}">Staff Name</span></p>
+                <p><strong>Total Amount:</strong> $<span th:text="${#numbers.formatDecimal(reservation.totalAmount, 1, 2)}">0.00</span></p>
+            </div>
+            
+            <p style="margin-top: 20px;">Please arrive 10 minutes before your scheduled time. If you need to reschedule or cancel your appointment, please do so at least 24 hours in advance.</p>
+            
+            <p>If you have any questions about your reservation, please don't hesitate to contact us.</p>
+            
+            <a href="http://beautycenter.com/customer/reservations" class="button">View Reservation Details</a>
+        </div>
+
+        <div class="footer-text">
+            <p>This is an automated message, please do not reply to this email.</p>
+            <p>&copy; 2024 Beauty Center. All rights reserved.</p>
+        </div>
+    </div>
+</body>
+</html> 

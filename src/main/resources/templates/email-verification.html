@@ -1,0 +1,9 @@
+<h1>Verify Your Email Address</h1>
+<p>Dear <span th:text="${firstName}"></span>,</p>
+<p>Thank you for registering with us! To complete your registration, please verify your email address by clicking the button below:</p>
+<p><a th:href="${verificationUrl}" class="button">Verify Email Address</a></p>
+<p>Or copy and paste this link into your browser:</p>
+<p><a th:href="${verificationUrl}" th:text="${verificationUrl}"></a></p>
+<p>This verification link will expire in 24 hours.</p>
+<p>If you didn't create an account with us, please ignore this email.</p>
+<p>Best regards,<br>The <span th:text="${businessName}"></span> Team</p>

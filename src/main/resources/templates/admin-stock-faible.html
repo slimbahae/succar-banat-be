@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Alerte Stock Faible</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            line-height: 1.5;
+            color: #2d3748;
+            background-color: #f7fafc;
+            margin: 0;
+            padding: 20px;
+            font-size: 14px;
+        }
+        .container {
+            max-width: 450px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid #e2e8f0;
+        }
+        .header {
+            background: #ed8936;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 18px;
+            font-weight: 500;
+        }
+        .alerte-icon {
+            font-size: 32px;
+            margin: 10px 0;
+        }
+        .produit-nom {
+            font-size: 18px;
+            font-weight: 600;
+            margin: 10px 0;
+        }
+        .stock-niveau {
+            font-size: 24px;
+            font-weight: 600;
+            margin: 5px 0;
+        }
+        .section {
+            padding: 20px;
+        }
+        .alerte-box {
+            background: #fed7d7;
+            border: 1px solid #feb2b2;
+            border-radius: 6px;
+            padding: 15px;
+            margin: 15px 0;
+            text-align: center;
+        }
+        .alerte-box .message {
+            color: #742a2a;
+            font-weight: 500;
+            margin: 0;
+        }
+        .details {
+            background: #f7fafc;
+            border-radius: 6px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        .row {
+            display: flex;
+            justify-content: space-between;
+            margin: 8px 0;
+            padding: 5px 0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .row:last-child {
+            border-bottom: none;
+        }
+        .label {
+            color: #718096;
+            font-size: 13px;
+            font-weight: 500;
+        }
+        .value {
+            font-weight: 500;
+            color: #2d3748;
+        }
+        .stock-critique {
+            color: #e53e3e;
+            font-weight: 600;
+        }
+        .image-produit {
+            text-align: center;
+            margin: 15px 0;
+        }
+        .image-produit img {
+            max-width: 100px;
+            height: auto;
+            border-radius: 6px;
+            border: 1px solid #e2e8f0;
+        }
+        .actions {
+            text-align: center;
+            padding: 20px;
+            background: #f7fafc;
+        }
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            margin: 0 5px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 500;
+        }
+        .btn-warning {
+            background: #ed8936;
+            color: white;
+        }
+        .btn-secondary {
+            background: #718096;
+            color: white;
+        }
+        .footer {
+            text-align: center;
+            padding: 15px;
+            background: #2d3748;
+            color: #a0aec0;
+            font-size: 11px;
+        }
+        .urgence {
+            background: #fff5f5;
+            border-left: 4px solid #e53e3e;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 0 6px 6px 0;
+        }
+        .urgence h3 {
+            margin: 0 0 8px 0;
+            color: #742a2a;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        .urgence p {
+            margin: 0;
+            color: #742a2a;
+            font-size: 13px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <div class="alerte-icon">⚠️</div>
+        <h1>Stock Faible</h1>
+        <div class="produit-nom" th:text="${product.name}">Sérum Vitamine C</div>
+        <div class="stock-niveau" th:text="${product.stockQuantity} + ' restant'">3 restant</div>
+    </div>
+
+    <div class="section">
+        <div class="alerte-box">
+            <p class="message">Le stock de ce produit est critique et nécessite un réapprovisionnement urgent.</p>
+        </div>
+
+        <div class="image-produit" th:if="${product.imageUrls != null and !product.imageUrls.isEmpty()}">
+            <img th:src="${product.imageUrls[0]}" alt="Image produit" />
+        </div>
+
+        <div class="details">
+            <div class="row">
+                <span class="label">Produit</span>
+                <span class="value" th:text="${product.name}">Sérum Vitamine C</span>
+            </div>
+            <div class="row">
+                <span class="label">Catégorie</span>
+                <span class="value" th:text="${product.category}">Soins Visage</span>
+            </div>
+            <div class="row">
+                <span class="label">Stock actuel</span>
+                <span class="value stock-critique" th:text="${product.stockQuantity} + ' unités'">3 unités</span>
+            </div>
+            <div class="row">
+                <span class="label">Prix unitaire</span>
+                <span class="value" th:text="${#numbers.formatDecimal(product.price, 1, 2)} + ' €'">29,90 €</span>
+            </div>
+            <div class="row" th:if="${product.sku}">
+                <span class="label">Référence</span>
+                <span class="value" th:text="${product.sku}">VIT-C-001</span>
+            </div>
+            <div class="row" th:if="${product.brand}">
+                <span class="label">Marque</span>
+                <span class="value" th:text="${product.brand}">BeautyLab</span>
+            </div>
+        </div>
+
+        <div class="urgence">
+            <h3>Action recommandée</h3>
+            <p>Réapprovisionner ce produit dès que possible pour éviter une rupture de stock.</p>
+        </div>
+    </div>
+
+    <div class="actions">
+        <a href="#" class="btn btn-warning">Commander</a>
+        <a href="#" class="btn btn-secondary">Voir Produit</a>
+    </div>
+
+    <div class="footer">
+        <p th:text="${businessName} + ' - Alerte automatique'">Beauty Center - Alerte automatique</p>
+    </div>
+</div>
+</body>
+</html>

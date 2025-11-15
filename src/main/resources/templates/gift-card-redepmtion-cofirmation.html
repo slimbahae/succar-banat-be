@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carte cadeau utilisée</title>
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px; }
+        .header { background: linear-gradient(135deg, #28a745 0%, #20c997 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
+        .content { background: white; padding: 30px; border: 1px solid #ddd; border-radius: 0 0 10px 10px; }
+        .success { background: #d4edda; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #28a745; }
+        .amount { font-size: 24px; font-weight: bold; color: #28a745; }
+        .button { display: inline-block; background: #28a745; color: white; padding: 12px 30px; text-decoration: none; border-radius: 5px; margin: 20px 0; }
+        .footer { text-align: center; margin-top: 30px; font-size: 12px; color: #666; }
+    </style>
+</head>
+<body>
+<div class="header">
+    <h1>✅ Carte cadeau utilisée</h1>
+    <p>Votre solde a été rechargé avec succès</p>
+</div>
+
+<div class="content">
+    <p>Bonjour <strong th:text="${giftCard.recipientName}">Nom</strong>,</p>
+
+    <div class="success">
+        <h3>🎉 Succès!</h3>
+        <p>Votre carte cadeau a été utilisée avec succès.</p>
+        <p><strong>Montant ajouté:</strong> <span class="amount" th:text="${amount}">50.00€</span></p>
+        <p><strong>Date d'utilisation:</strong> <span th:text="${redemptionDate}">06/07/2024 à 16:30</span></p>
+    </div>
+
+    <p>Le montant a été ajouté à votre solde et vous pouvez maintenant l'utiliser pour vos achats.</p>
+
+    <a href="#" th:href="${frontendUrl + '/customer/balance'}" class="button">Voir mon solde</a>
+
+    <div class="footer">
+        <p>Merci de votre confiance,<br>
+            L'équipe <span th:text="${appName}">SuccarBanat</span></p>
+    </div>
+</div>
+</body>
+</html>

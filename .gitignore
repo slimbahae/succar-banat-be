@@ -1,0 +1,102 @@
+# Compiled class files
+*.class
+
+# Log files
+*.log
+
+# Package Files
+*.jar
+*.war
+*.nar
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# Maven
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+.mvn/wrapper/maven-wrapper.jar
+
+# Gradle
+.gradle
+build/
+
+# IDEs
+.idea/
+*.iws
+*.iml
+*.ipr
+.vscode/
+*.swp
+*.bak
+*.tmp
+*.orig
+*~.nib
+.DS_Store
+.settings/
+.project
+.classpath
+.factorypath
+.springBeans
+.sts4-cache
+
+# Environment variables and secrets
+.env
+.env.local
+.env.*.local
+*.p12
+devcert.p12
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS Files
+.DS_Store
+Thumbs.db
+
+# Uploads directory
+uploads/
+
+# Testing
+*.class
+*.jar
+*.war
+*.ear
+
+# Security Reports
+zap-reports/
+
+# Documentation (optional - uncomment if you don't want to track these)
+# *.md
+# AGENTS.md
+# DEPLOYMENT_CHECKLIST.md
+# DEPLOYMENT_READINESS.md
+# SECURITY_FIXES.md
+# SECURITY_REMEDIATION_SUMMARY.md
+# STRIPE_PRODUCTION_CHECKLIST.md
+# STRIPE_SECURITY_AUDIT.md
+
+# Frontend (not needed in backend repo)
+beauty-center-frontend/
+node_modules/
+
+# Docker
+docker-compose.yaml
+
+# PDF files
+*.pdf
+
+# Application logs
+app.loh

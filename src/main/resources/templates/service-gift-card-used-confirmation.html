@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Service utilisé</title>
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px; }
+        .header { background: linear-gradient(135deg, #e83e8c 0%, #fd7e14 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
+        .content { background: white; padding: 30px; border: 1px solid #ddd; border-radius: 0 0 10px 10px; }
+        .success { background: #f8d7da; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #e83e8c; }
+        .amount { font-size: 24px; font-weight: bold; color: #e83e8c; }
+        .footer { text-align: center; margin-top: 30px; font-size: 12px; color: #666; }
+    </style>
+</head>
+<body>
+<div class="header">
+    <h1>💅 Service utilisé</h1>
+    <p>Votre carte cadeau service a été utilisée</p>
+</div>
+
+<div class="content">
+    <p>Bonjour <strong th:text="${giftCard.recipientName}">Nom</strong>,</p>
+
+    <div class="success">
+        <h3>✨ Merci de votre visite!</h3>
+        <p>Votre carte cadeau service a été utilisée avec succès.</p>
+        <p><strong>Valeur utilisée:</strong> <span class="amount" th:text="${amount}">50.00€</span></p>
+        <p><strong>Date d'utilisation:</strong> <span th:text="${usedDate}">06/07/2024 à 16:30</span></p>
+    </div>
+
+    <p>Nous espérons que vous avez apprécié votre expérience dans notre salon!</p>
+
+    <div class="footer">
+        <p>À bientôt,<br>
+            L'équipe <span th:text="${appName}">SuccarBanat</span></p>
+    </div>
+</div>
+</body>
+</html>

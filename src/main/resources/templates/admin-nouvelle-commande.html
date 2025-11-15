@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Nouvelle Commande</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            line-height: 1.5;
+            color: #2d3748;
+            background-color: #f7fafc;
+            margin: 0;
+            padding: 20px;
+            font-size: 14px;
+        }
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid #e2e8f0;
+        }
+        .header {
+            background: #4299e1;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 18px;
+            font-weight: 500;
+        }
+        .montant {
+            font-size: 24px;
+            font-weight: 600;
+            margin: 10px 0 5px 0;
+        }
+        .numero {
+            font-size: 12px;
+            opacity: 0.9;
+        }
+        .section {
+            padding: 20px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .section:last-child {
+            border-bottom: none;
+        }
+        .row {
+            display: flex;
+            justify-content: space-between;
+            margin: 8px 0;
+        }
+        .label {
+            color: #718096;
+            font-size: 13px;
+        }
+        .value {
+            font-weight: 500;
+            color: #2d3748;
+        }
+        .items {
+            background: #f7fafc;
+            border-radius: 6px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        .item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .item:last-child {
+            border-bottom: none;
+        }
+        .item-name {
+            font-weight: 500;
+        }
+        .item-qty {
+            color: #718096;
+            font-size: 13px;
+        }
+        .item-price {
+            font-weight: 600;
+            color: #4299e1;
+        }
+        .total {
+            background: #ebf8ff;
+            border-radius: 6px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        .total-row {
+            display: flex;
+            justify-content: space-between;
+            margin: 5px 0;
+        }
+        .total-final {
+            border-top: 1px solid #4299e1;
+            padding-top: 10px;
+            margin-top: 10px;
+            font-weight: 600;
+            font-size: 16px;
+            color: #4299e1;
+        }
+        .client {
+            background: #fffbeb;
+            border-left: 3px solid #f6ad55;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 0 6px 6px 0;
+        }
+        .client h3 {
+            margin: 0 0 10px 0;
+            font-size: 14px;
+            color: #744210;
+        }
+        .adresse {
+            color: #744210;
+            line-height: 1.4;
+        }
+        .actions {
+            text-align: center;
+            padding: 20px;
+            background: #f7fafc;
+        }
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            margin: 0 5px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 500;
+        }
+        .btn-primary {
+            background: #4299e1;
+            color: white;
+        }
+        .btn-secondary {
+            background: #718096;
+            color: white;
+        }
+        .footer {
+            text-align: center;
+            padding: 15px;
+            background: #2d3748;
+            color: #a0aec0;
+            font-size: 11px;
+        }
+        @media (max-width: 600px) {
+            .row, .total-row, .item {
+                font-size: 13px;
+            }
+            .montant {
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>Nouvelle Commande</h1>
+        <div class="montant" th:text="${orderTotal}">89,50 €</div>
+        <div class="numero" th:text="'N° ' + ${order.id.substring(order.id.length() - 8)}">N° 12345678</div>
+    </div>
+
+    <div class="section">
+        <div class="row">
+            <span class="label">Client</span>
+            <span class="value" th:text="${order.customerName}">Marie Dupont</span>
+        </div>
+        <div class="row">
+            <span class="label">Date</span>
+            <span class="value" th:text="${#dates.format(order.createdAt, 'd/M/yyyy HH:mm')}">17/06/2025 14:30</span>
+        </div>
+        <div class="row">
+            <span class="label">Statut</span>
+            <span class="value" th:text="${order.orderStatus}">EN COURS</span>
+        </div>
+        <div class="row">
+            <span class="label">Paiement</span>
+            <span class="value" th:text="${order.paymentStatus}">PAYÉ</span>
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="items">
+            <div th:each="item : ${order.items}" class="item">
+                <div>
+                    <div class="item-name" th:text="${item.productName}">Sérum Visage Premium</div>
+                    <div class="item-qty" th:text="'Qté: ' + ${item.quantity}">Qté: 2</div>
+                </div>
+                <div class="item-price" th:text="${#numbers.formatDecimal(item.totalPrice, 1, 2)} + ' €'">45,00 €</div>
+            </div>
+        </div>
+
+        <div class="total">
+            <div class="total-row">
+                <span>Sous-total</span>
+                <span th:text="${#numbers.formatDecimal(order.subtotal, 1, 2)} + ' €'">75,00 €</span>
+            </div>
+            <div class="total-row">
+                <span>TVA</span>
+                <span th:text="${#numbers.formatDecimal(order.tax, 1, 2)} + ' €'">15,00 €</span>
+            </div>
+            <div class="total-row">
+                <span>Livraison</span>
+                <span th:text="${order.shippingCost == 0 ? 'Gratuite' : #numbers.formatDecimal(order.shippingCost, 1, 2) + ' €'}">Gratuite</span>
+            </div>
+            <div class="total-row total-final">
+                <span>Total</span>
+                <span th:text="${#numbers.formatDecimal(order.total, 1, 2)} + ' €'">89,50 €</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="client">
+            <h3>Adresse de livraison</h3>
+            <div class="adresse">
+                <strong th:text="${order.shippingAddress.fullName}">Marie Dupont</strong><br>
+                <span th:text="${order.shippingAddress.addressLine1}">123 Rue de la Paix</span><br>
+                <span th:if="${order.shippingAddress.addressLine2}" th:text="${order.shippingAddress.addressLine2}">Apt 4B</span><br>
+                <span th:text="${order.shippingAddress.postalCode} + ' ' + ${order.shippingAddress.city}">75001 Paris</span><br>
+                <span th:text="${order.shippingAddress.phoneNumber}">06 12 34 56 78</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="actions">
+        <a href="#" class="btn btn-primary">Traiter</a>
+        <a href="#" class="btn btn-secondary">Voir</a>
+    </div>
+
+    <div class="footer">
+        <p th:text="${businessName} + ' - Notification automatique'">Beauty Center - Notification automatique</p>
+    </div>
+</div>
+</body>
+</html>

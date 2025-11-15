@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirmation d'achat</title>
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px; }
+        .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
+        .content { background: white; padding: 30px; border: 1px solid #ddd; border-radius: 0 0 10px 10px; }
+        .gift-card { background: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #667eea; }
+        .amount { font-size: 24px; font-weight: bold; color: #667eea; }
+        .code { background: #e3f2fd; padding: 15px; border-radius: 5px; font-family: monospace; font-size: 16px; font-weight: bold; text-align: center; margin: 15px 0; }
+        .button { display: inline-block; background: #667eea; color: white; padding: 12px 30px; text-decoration: none; border-radius: 5px; margin: 20px 0; }
+        .footer { text-align: center; margin-top: 30px; font-size: 12px; color: #666; }
+    </style>
+</head>
+<body>
+<div class="header">
+    <h1>🎁 Confirmation d'achat</h1>
+    <p>Votre carte cadeau a été créée avec succès</p>
+</div>
+
+<div class="content">
+    <p>Bonjour <strong th:text="${giftCard.purchaserName}">Nom</strong>,</p>
+
+    <p>Votre carte cadeau a été créée avec succès et envoyée à <strong th:text="${giftCard.recipientName}">Destinataire</strong>.</p>
+
+    <div class="gift-card">
+        <h3>Détails de la carte cadeau</h3>
+        <p><strong>Montant:</strong> <span class="amount" th:text="${amount}">50.00€</span></p>
+        <p><strong>Type:</strong> <span th:text="${giftCard.type == 'BALANCE' ? 'Solde' : 'Service'}">Type</span></p>
+        <p><strong>Destinataire:</strong> <span th:text="${giftCard.recipientName}">Destinataire</span></p>
+        <p><strong>Email destinataire:</strong> <span th:text="${giftCard.recipientEmail}">email@example.com</span></p>
+        <p><strong>Expire le:</strong> <span th:text="${expirationDate}">31/12/2024</span></p>
+        <p th:if="${giftCard.message}" th:text="'Message: ' + ${giftCard.message}"></p>
+    </div>
+
+    <div class="code">
+        <p><strong>Code de la carte:</strong></p>
+        <span th:text="${code}">GIFT-CODE-123</span>
+    </div>
+
+    <p th:if="${giftCard.type == 'BALANCE'}">
+        Le destinataire peut utiliser ce code pour recharger son solde sur notre plateforme.
+    </p>
+
+    <p th:if="${giftCard.type == 'SERVICE'}">
+        Le destinataire recevra un email avec les instructions pour utiliser cette carte cadeau service.
+    </p>
+
+    <a href="#" th:href="${frontendUrl}" class="button">Visiter notre site</a>
+
+    <div class="footer">
+        <p>Merci de votre confiance,<br>
+            L'équipe <span th:text="${appName}">SuccarBanat</span></p>
+    </div>
+</div>
+</body>
+</html>

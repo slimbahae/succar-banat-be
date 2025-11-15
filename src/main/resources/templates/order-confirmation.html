@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Order Confirmed - Beauty Center</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #1f2937;
+            background-color: #f9fafb;
+            padding: 20px;
+            font-size: 16px;
+        }
+
+        .container {
+            max-width: 680px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid #e5e7eb;
+        }
+
+        .header {
+            background-color: #dc2626;
+            padding: 40px 30px;
+            text-align: center;
+            color: #ffffff;
+        }
+
+        .icon-circle {
+            width: 70px;
+            height: 70px;
+            background-color: rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .checkmark {
+            width: 30px;
+            height: 30px;
+            color: #ffffff;
+        }
+
+        .header h1 {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .header p {
+            font-size: 18px;
+            margin-bottom: 24px;
+            opacity: 0.9;
+        }
+
+        .order-number-box {
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 8px;
+            padding: 20px 30px;
+            display: inline-block;
+            color: #1f2937;
+        }
+
+        .order-number-box p {
+            margin: 0 0 8px 0;
+            font-size: 14px;
+            color: #6b7280;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .order-number-box strong {
+            font-size: 24px;
+            color: #dc2626;
+            display: block;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        .section {
+            padding: 40px 30px;
+            border-bottom: 1px solid #f3f4f6;
+        }
+
+        .section:last-of-type {
+            border-bottom: none;
+        }
+
+        h2 {
+            font-size: 24px;
+            color: #1f2937;
+            margin: 0 0 24px 0;
+            font-weight: 600;
+        }
+
+        .status-timeline {
+            display: table;
+            width: 100%;
+            margin: 20px 0;
+        }
+
+        .status-timeline .step {
+            display: table-cell;
+            text-align: center;
+            vertical-align: top;
+            width: 25%;
+            padding: 0 10px;
+        }
+
+        .status-timeline .step .icon {
+            width: 50px;
+            height: 50px;
+            background-color: #e5e7eb;
+            border: 3px solid #ffffff;
+            border-radius: 50%;
+            margin: 0 auto 16px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: #9ca3af;
+        }
+
+        .status-timeline .step.completed .icon {
+            background-color: #dc2626;
+            color: #ffffff;
+        }
+
+        .status-timeline .step .label {
+            font-size: 16px;
+            color: #1f2937;
+            font-weight: 600;
+            margin-bottom: 4px;
+            display: block;
+        }
+
+        .status-timeline .step .date {
+            font-size: 14px;
+            color: #6b7280;
+        }
+
+        .status-timeline .step.completed .label {
+            color: #dc2626;
+        }
+
+        .item-list {
+            background-color: #f9fafb;
+            border-radius: 8px;
+            padding: 24px;
+            margin: 20px 0;
+        }
+
+        .item-list .item {
+            display: table;
+            width: 100%;
+            padding: 15px 0;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .item-list .item:last-child {
+            border-bottom: none;
+        }
+
+        .item-list .item img {
+            display: table-cell;
+            width: 80px;
+            height: 80px;
+            border-radius: 8px;
+            vertical-align: top;
+            margin-right: 20px;
+        }
+
+        .item-list .item-details {
+            display: table-cell;
+            vertical-align: top;
+            width: auto;
+        }
+
+        .item-list .item-details h3 {
+            margin: 0 0 8px;
+            font-size: 18px;
+            color: #1f2937;
+            font-weight: 600;
+        }
+
+        .item-list .item-details p {
+            margin: 0 0 4px;
+            font-size: 14px;
+            color: #6b7280;
+        }
+
+        .item-list .item-price {
+            display: table-cell;
+            vertical-align: top;
+            text-align: right;
+            font-weight: 700;
+            font-size: 18px;
+            color: #dc2626;
+            width: 100px;
+        }
+
+        .summary-totals {
+            background-color: #f8fafc;
+            border-radius: 8px;
+            padding: 24px;
+            margin-top: 24px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .summary-totals .row {
+            display: table;
+            width: 100%;
+            padding: 8px 0;
+            font-size: 16px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .summary-totals .row:last-child {
+            border-bottom: none;
+            margin-top: 8px;
+            padding-top: 16px;
+            border-top: 2px solid #dc2626;
+            font-weight: 700;
+            font-size: 20px;
+        }
+
+        .summary-totals .row .label {
+            display: table-cell;
+            color: #4b5563;
+            font-weight: 500;
+        }
+
+        .summary-totals .row .value {
+            display: table-cell;
+            text-align: right;
+            color: #1f2937;
+            font-weight: 600;
+        }
+
+        .summary-totals .row:last-child .value {
+            color: #dc2626;
+        }
+
+        .shipping-payment {
+            display: table;
+            width: 100%;
+            padding: 40px 30px;
+            background-color: #f9fafb;
+        }
+
+        .shipping-payment > div {
+            display: table-cell;
+            width: 50%;
+            vertical-align: top;
+            background-color: #ffffff;
+            padding: 24px;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+        }
+
+        .shipping-payment > div:first-child {
+            margin-right: 15px;
+        }
+
+        .shipping-payment > div:last-child {
+            margin-left: 15px;
+        }
+
+        .shipping-payment h3 {
+            font-size: 18px;
+            color: #1f2937;
+            margin: 0 0 16px 0;
+            font-weight: 600;
+        }
+
+        .shipping-payment p {
+            margin: 0 0 8px 0;
+            font-size: 15px;
+            color: #6b7280;
+            line-height: 1.5;
+        }
+
+        .shipping-payment p.strong {
+            font-weight: 600;
+            color: #1f2937;
+        }
+
+        .payment-status {
+            font-weight: 600;
+            color: #059669;
+            background-color: #d1fae5;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: inline-block;
+        }
+
+        .contact-footer {
+            background-color: #1f2937;
+            color: #ffffff;
+            padding: 40px 30px;
+            text-align: center;
+        }
+
+        .contact-footer h3 {
+            font-size: 20px;
+            margin-bottom: 20px;
+            color: #ffffff;
+        }
+
+        .contact-info {
+            display: table;
+            width: 100%;
+            margin-bottom: 30px;
+        }
+
+        .contact-item {
+            display: table-cell;
+            width: 33.33%;
+            text-align: center;
+            vertical-align: top;
+            padding: 0 15px;
+        }
+
+        .contact-item h4 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #f3f4f6;
+        }
+
+        .contact-item p {
+            font-size: 14px;
+            color: #d1d5db;
+            margin-bottom: 4px;
+        }
+
+        .contact-item a {
+            color: #fbbf24;
+            text-decoration: none;
+        }
+
+        .contact-item a:hover {
+            text-decoration: underline;
+        }
+
+        .social-links {
+            margin: 30px 0 20px 0;
+        }
+
+        .social-links a {
+            display: inline-block;
+            margin: 0 15px;
+            color: #d1d5db;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .social-links a:hover {
+            color: #ffffff;
+        }
+
+        .footer-legal {
+            font-size: 13px;
+            color: #9ca3af;
+            line-height: 1.5;
+        }
+
+        .footer-legal p {
+            margin-bottom: 8px;
+        }
+
+        .brand {
+            font-weight: 600;
+            color: #dc2626;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 14px 28px;
+            background-color: #dc2626;
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 8px;
+            margin-top: 20px;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .button:hover {
+            background-color: #b91c1c;
+        }
+
+        .text-green {
+            color: #059669;
+        }
+
+        .text-red {
+            color: #dc2626;
+        }
+
+        /* Mobile Responsive */
+        @media only screen and (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
+            .container {
+                border-radius: 8px;
+            }
+
+            .header {
+                padding: 30px 20px;
+            }
+
+            .header h1 {
+                font-size: 26px;
+            }
+
+            .section {
+                padding: 30px 20px;
+            }
+
+            .status-timeline .step {
+                display: block;
+                width: 100%;
+                margin-bottom: 20px;
+                text-align: left;
+            }
+
+            .status-timeline .step .icon {
+                float: left;
+                margin-right: 15px;
+                margin-bottom: 0;
+            }
+
+            .shipping-payment,
+            .contact-info {
+                display: block;
+            }
+
+            .shipping-payment > div,
+            .contact-item {
+                display: block;
+                width: 100%;
+                margin: 0 0 20px 0;
+            }
+
+            .item-list .item,
+            .item-list .item img,
+            .item-list .item-details,
+            .item-list .item-price {
+                display: block;
+                width: 100%;
+                text-align: left;
+            }
+
+            .item-list .item img {
+                margin-bottom: 10px;
+                width: 60px;
+                height: 60px;
+            }
+
+            .item-list .item-price {
+                text-align: right;
+                margin-top: 10px;
+            }
+        }
+
+        @media only screen and (max-width: 480px) {
+            .order-number-box {
+                padding: 16px 20px;
+            }
+
+            .order-number-box strong {
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <div class="icon-circle">
+            <div class="checkmark">✓</div>
+        </div>
+        <h1>Order Confirmed!</h1>
+        <p th:text="'Thank you for your purchase, ' + ${order.customerName} + '!'">Thank you for your purchase, Sarah!</p>
+        <div class="order-number-box">
+            <p>Order Number</p>
+            <strong th:text="'#' + ${order.id.substring(order.id.length() - 8)}">#4b7f8dd6</strong>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>📋 Order Status</h2>
+        <div class="status-timeline">
+            <div class="step completed">
+                <div class="icon">✓</div>
+                <span class="label">Confirmed</span>
+                <span class="date">Just now</span>
+            </div>
+
+            <div th:class="'step ' + (${order.orderStatus == 'PROCESSING' || order.orderStatus == 'SHIPPED' || order.orderStatus == 'DELIVERED'} ? 'completed' : '')" class="step">
+                <div class="icon">📋</div>
+                <span class="label">Processing</span>
+                <span class="date">In progress</span>
+            </div>
+
+            <div th:class="'step ' + (${order.orderStatus == 'SHIPPED' || order.orderStatus == 'DELIVERED'} ? 'completed' : '')" class="step">
+                <div class="icon">🚚</div>
+                <span class="label">Shipped</span>
+                <span class="date" th:text="'Est. ' + ${#dates.format(order.estimatedDeliveryDate, 'M/d/yyyy')}">Est. 6/13/2025</span>
+            </div>
+
+            <div th:class="'step ' + (${order.orderStatus == 'DELIVERED'} ? 'completed' : '')" class="step">
+                <div class="icon">📦</div>
+                <span class="label">Delivered</span>
+                <span class="date" th:text="${order.orderStatus == 'DELIVERED' ? 'Completed' : 'Pending'}">Pending</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>🛍️ Order Summary</h2>
+        <div class="item-list">
+            <div class="item" th:each="item : ${order.items}">
+                <img th:src="${item.imageUrl}" alt="Product Image" th:if="${item.imageUrl}" src="https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=150&h=150&fit=crop"/>
+                <div class="item-details">
+                    <h3 th:text="${item.productName}">Premium Face Serum</h3>
+                    <p>Quantity: <span th:text="${item.quantity}">2</span></p>
+                    <p>$<span th:text="${#numbers.formatDecimal(item.unitPrice, 1, 2)}">45.00</span> each</p>
+                </div>
+                <div class="item-price">$<span th:text="${#numbers.formatDecimal(item.totalPrice, 1, 2)}">90.00</span></div>
+            </div>
+        </div>
+        <div class="summary-totals">
+            <div class="row">
+                <span class="label">Subtotal</span>
+                <span class="value">$<span th:text="${#numbers.formatDecimal(order.subtotal, 1, 2)}">90.00</span></span>
+            </div>
+            <div class="row">
+                <span class="label">Tax</span>
+                <span class="value">$<span th:text="${#numbers.formatDecimal(order.tax, 1, 2)}">7.20</span></span>
+            </div>
+            <div class="row">
+                <span class="label">Shipping</span>
+                <span class="value" th:text="${order.shippingCost == 0 ? 'Free' : '$' + #numbers.formatDecimal(order.shippingCost, 1, 2)}">Free</span>
+            </div>
+            <div class="row">
+                <span class="label">Total</span>
+                <span class="value">$<span th:text="${#numbers.formatDecimal(order.total, 1, 2)}">97.20</span></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="shipping-payment">
+        <div>
+            <h3>🚚 Shipping Address</h3>
+            <p class="strong" th:text="${order.shippingAddress.fullName}">Sarah Johnson</p>
+            <p th:text="${order.shippingAddress.addressLine1}">123 Beauty Lane</p>
+            <p th:if="${order.shippingAddress.addressLine2}" th:text="${order.shippingAddress.addressLine2}">Apt 4B</p>
+            <p th:text="${order.shippingAddress.city} + ', ' + ${order.shippingAddress.state} + ' ' + ${order.shippingAddress.postalCode}">New York, NY 10001</p>
+            <p th:text="${order.shippingAddress.country}">United States</p>
+            <p th:text="${order.shippingAddress.phoneNumber}">(555) 123-4567</p>
+        </div>
+        <div>
+            <h3>💳 Payment Information</h3>
+            <p>Payment Method: <span class="strong" th:text="${order.paymentMethod}">Credit Card</span></p>
+            <p>Payment Status: <span class="payment-status" th:text="${order.paymentStatus}">PAID</span></p>
+            <p>Order Date: <span class="strong" th:text="${#dates.format(order.createdAt, 'M/d/yyyy')}">6/8/2025</span></p>
+        </div>
+    </div>
+
+    <div class="contact-footer">
+        <h3>Need Help? We're Here for You!</h3>
+
+        <div class="contact-info">
+            <div class="contact-item">
+                <h4>📞 Phone Support</h4>
+                <p><a href="tel:+1-800-BEAUTY-1">(800) BEAUTY-1</a></p>
+                <p>Mon-Fri: 9AM-8PM EST</p>
+                <p>Sat-Sun: 10AM-6PM EST</p>
+            </div>
+
+            <div class="contact-item">
+                <h4>📧 Email Support</h4>
+                <p><a href="mailto:support@beautycenter.com">support@beautycenter.com</a></p>
+                <p>Response within 24 hours</p>
+                <p>Order inquiries welcome</p>
+            </div>
+
+            <div class="contact-item">
+                <h4>💬 Live Chat</h4>
+                <p><a href="https://beautycenter.com/chat">beautycenter.com/chat</a></p>
+                <p>Available 24/7</p>
+                <p>Instant assistance</p>
+            </div>
+        </div>
+
+        <div class="social-links">
+            <a href="https://facebook.com/beautycenter">Facebook</a>
+            <a href="https://instagram.com/beautycenter">Instagram</a>
+            <a href="https://twitter.com/beautycenter">Twitter</a>
+            <a href="https://youtube.com/beautycenter">YouTube</a>
+        </div>
+
+        <div class="footer-legal">
+            <p><strong>Beauty Center</strong> | 123 Beauty Boulevard, New York, NY 10001</p>
+            <p>This email was sent to you because you placed an order with us.</p>
+            <p>You can <a href="#" style="color: #fbbf24;">update your email preferences</a> or <a href="#" style="color: #fbbf24;">unsubscribe</a> at any time.</p>
+            <p>&copy; 2024 <span class="brand">Beauty Center</span>. All rights reserved.</p>
+            <p><a href="#" style="color: #9ca3af;">Privacy Policy</a> | <a href="#" style="color: #9ca3af;">Terms of Service</a> | <a href="#" style="color: #9ca3af;">Return Policy</a></p>
+        </div>
+    </div>
+</div>
+</body>
+</html>

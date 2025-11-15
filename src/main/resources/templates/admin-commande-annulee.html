@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Commande Annulée</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            line-height: 1.5;
+            color: #2d3748;
+            background-color: #f7fafc;
+            margin: 0;
+            padding: 20px;
+            font-size: 14px;
+        }
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid #e2e8f0;
+        }
+        .header {
+            background: #e53e3e;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 18px;
+            font-weight: 500;
+        }
+        .icone-annulation {
+            font-size: 32px;
+            margin: 10px 0;
+        }
+        .montant {
+            font-size: 24px;
+            font-weight: 600;
+            margin: 10px 0 5px 0;
+        }
+        .numero {
+            font-size: 12px;
+            opacity: 0.9;
+        }
+        .section {
+            padding: 20px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .section:last-child {
+            border-bottom: none;
+        }
+        .alerte-box {
+            background: #fed7d7;
+            border: 1px solid #feb2b2;
+            border-radius: 6px;
+            padding: 15px;
+            margin: 15px 0;
+            text-align: center;
+        }
+        .alerte-box .message {
+            color: #742a2a;
+            font-weight: 500;
+            margin: 0;
+        }
+        .row {
+            display: flex;
+            justify-content: space-between;
+            margin: 8px 0;
+        }
+        .label {
+            color: #718096;
+            font-size: 13px;
+        }
+        .value {
+            font-weight: 500;
+            color: #2d3748;
+        }
+        .status-annule {
+            background: #fed7d7;
+            color: #742a2a;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 500;
+            text-transform: uppercase;
+        }
+        .items {
+            background: #f7fafc;
+            border-radius: 6px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        .item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .item:last-child {
+            border-bottom: none;
+        }
+        .item-name {
+            font-weight: 500;
+        }
+        .item-qty {
+            color: #718096;
+            font-size: 13px;
+        }
+        .item-price {
+            font-weight: 600;
+            color: #e53e3e;
+            text-decoration: line-through;
+        }
+        .total {
+            background: #fff5f5;
+            border-left: 3px solid #e53e3e;
+            border-radius: 0 6px 6px 0;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        .total-row {
+            display: flex;
+            justify-content: space-between;
+            margin: 5px 0;
+        }
+        .total-final {
+            border-top: 1px solid #e53e3e;
+            padding-top: 10px;
+            margin-top: 10px;
+            font-weight: 600;
+            font-size: 16px;
+            color: #e53e3e;
+        }
+        .client {
+            background: #fffbeb;
+            border-left: 3px solid #f6ad55;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 0 6px 6px 0;
+        }
+        .client h3 {
+            margin: 0 0 10px 0;
+            font-size: 14px;
+            color: #744210;
+        }
+        .adresse {
+            color: #744210;
+            line-height: 1.4;
+        }
+        .raison-box {
+            background: #fff8e1;
+            border: 1px solid #ffc107;
+            border-radius: 6px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        .raison-box h3 {
+            margin: 0 0 8px 0;
+            color: #856404;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        .raison-box p {
+            margin: 0;
+            color: #856404;
+            font-style: italic;
+        }
+        .actions {
+            text-align: center;
+            padding: 20px;
+            background: #f7fafc;
+        }
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            margin: 0 5px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 500;
+        }
+        .btn-danger {
+            background: #e53e3e;
+            color: white;
+        }
+        .btn-secondary {
+            background: #718096;
+            color: white;
+        }
+        .footer {
+            text-align: center;
+            padding: 15px;
+            background: #2d3748;
+            color: #a0aec0;
+            font-size: 11px;
+        }
+        .remboursement {
+            background: #f0fff4;
+            border-left: 3px solid #48bb78;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 0 6px 6px 0;
+        }
+        .remboursement h3 {
+            margin: 0 0 8px 0;
+            color: #22543d;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        .remboursement p {
+            margin: 0;
+            color: #22543d;
+        }
+        @media (max-width: 600px) {
+            .row, .total-row, .item {
+                font-size: 13px;
+            }
+            .montant {
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <div class="icone-annulation">❌</div>
+        <h1>Commande Annulée</h1>
+        <div class="montant" th:text="${orderTotal}">89,50 €</div>
+        <div class="numero" th:text="'N° ' + ${order.id.substring(order.id.length() - 8)}">N° 12345678</div>
+    </div>
+
+    <div class="section">
+        <div class="alerte-box">
+            <p class="message">Cette commande a été annulée et nécessite votre attention pour le traitement du remboursement.</p>
+        </div>
+
+        <div class="row">
+            <span class="label">Client</span>
+            <span class="value" th:text="${order.customerName}">Marie Dupont</span>
+        </div>
+        <div class="row">
+            <span class="label">Date commande</span>
+            <span class="value" th:text="${#dates.format(order.createdAt, 'd/M/yyyy HH:mm')}">17/06/2025 14:30</span>
+        </div>
+        <div class="row">
+            <span class="label">Date annulation</span>
+            <span class="value" th:text="${#dates.format(order.updatedAt, 'd/M/yyyy HH:mm')}">17/06/2025 16:45</span>
+        </div>
+        <div class="row">
+            <span class="label">Statut</span>
+            <span class="status-annule">ANNULÉE</span>
+        </div>
+        <div class="row">
+            <span class="label">Paiement</span>
+            <span class="value" th:text="${order.paymentStatus}">REMBOURSÉ</span>
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="raison-box">
+            <h3>Raison de l'annulation</h3>
+            <p th:text="${reason}">Commande annulée par l'administrateur</p>
+        </div>
+
+        <div class="items">
+            <h4 style="margin: 0 0 10px 0; color: #4a5568;">Articles annulés:</h4>
+            <div th:each="item : ${order.items}" class="item">
+                <div>
+                    <div class="item-name" th:text="${item.productName}">Sérum Visage Premium</div>
+                    <div class="item-qty" th:text="'Qté: ' + ${item.quantity}">Qté: 2</div>
+                </div>
+                <div class="item-price" th:text="${#numbers.formatDecimal(item.totalPrice, 1, 2)} + ' €'">45,00 €</div>
+            </div>
+        </div>
+
+        <div class="total">
+            <div class="total-row">
+                <span>Sous-total</span>
+                <span th:text="${#numbers.formatDecimal(order.subtotal, 1, 2)} + ' €'">75,00 €</span>
+            </div>
+            <div class="total-row">
+                <span>TVA</span>
+                <span th:text="${#numbers.formatDecimal(order.tax, 1, 2)} + ' €'">15,00 €</span>
+            </div>
+            <div class="total-row">
+                <span>Livraison</span>
+                <span th:text="${order.shippingCost == 0 ? 'Gratuite' : #numbers.formatDecimal(order.shippingCost, 1, 2) + ' €'}">Gratuite</span>
+            </div>
+            <div class="total-row total-final">
+                <span>Montant à rembourser</span>
+                <span th:text="${#numbers.formatDecimal(order.total, 1, 2)} + ' €'">89,50 €</span>
+            </div>
+        </div>
+
+        <div th:if="${order.paymentStatus == 'PAID' or order.paymentStatus == 'REFUNDED'}" class="remboursement">
+            <h3>💳 Remboursement</h3>
+            <p th:if="${order.paymentStatus == 'REFUNDED'}">Le remboursement a été traité automatiquement.</p>
+            <p th:if="${order.paymentStatus == 'PAID'}">⚠️ Remboursement à traiter manuellement.</p>
+            <p th:if="${order.stripePaymentIntentId}">ID Paiement Stripe: <span th:text="${order.stripePaymentIntentId}">pi_123456789</span></p>
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="client">
+            <h3>Informations client</h3>
+            <div class="adresse">
+                <strong th:text="${order.shippingAddress.fullName}">Marie Dupont</strong><br>
+                <span th:text="${order.shippingAddress.addressLine1}">123 Rue de la Paix</span><br>
+                <span th:if="${order.shippingAddress.addressLine2}" th:text="${order.shippingAddress.addressLine2}">Apt 4B</span><br>
+                <span th:text="${order.shippingAddress.postalCode} + ' ' + ${order.shippingAddress.city}">75001 Paris</span><br>
+                <strong>Email:</strong> <span th:text="${order.customerEmail}">marie@email.com</span><br>
+                <strong>Tél:</strong> <span th:text="${order.shippingAddress.phoneNumber}">06 12 34 56 78</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="actions">
+        <a href="#" class="btn btn-danger">Traiter Remboursement</a>
+        <a href="#" class="btn btn-secondary">Voir Détails</a>
+    </div>
+
+    <div class="footer">
+        <p th:text="${businessName} + ' - Notification automatique'">Beauty Center - Notification automatique</p>
+    </div>
+</div>
+</body>
+</html>

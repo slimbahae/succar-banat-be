@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nouvelle carte cadeau service</title>
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px; }
+        .header { background: linear-gradient(135deg, #dc3545 0%, #fd7e14 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
+        .content { background: white; padding: 30px; border: 1px solid #ddd; border-radius: 0 0 10px 10px; }
+        .admin-info { background: #f8d7da; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #dc3545; }
+        .amount { font-size: 24px; font-weight: bold; color: #dc3545; }
+        .verification { background: #e2e3e5; padding: 15px; border-radius: 5px; font-family: monospace; font-size: 14px; margin: 15px 0; }
+        .footer { text-align: center; margin-top: 30px; font-size: 12px; color: #666; }
+    </style>
+</head>
+<body>
+<div class="header">
+    <h1>🎁 Nouvelle carte cadeau service</h1>
+    <p>Action requise</p>
+</div>
+
+<div class="content">
+    <p>Bonjour Admin,</p>
+
+    <div class="admin-info">
+        <h3>Nouvelle carte cadeau service créée</h3>
+        <p><strong>Valeur:</strong> <span class="amount" th:text="${amount}">50.00€</span></p>
+        <p><strong>Acheteur:</strong> <span th:text="${giftCard.purchaserName}">Nom</span> (<span th:text="${giftCard.purchaserEmail}">email</span>)</p>
+        <p><strong>Destinataire:</strong> <span th:text="${giftCard.recipientName}">Nom</span> (<span th:text="${giftCard.recipientEmail}">email</span>)</p>
+        <p><strong>Date d'achat:</strong> <span th:text="${purchaseDate}">06/07/2024</span></p>
+        <p><strong>Expire le:</strong> <span th:text="${expirationDate}">06/01/2025</span></p>
+        <p th:if="${giftCard.message}" th:text="'Message: ' + ${giftCard.message}"></p>
+    </div>
+
+    <p><strong>Action requise:</strong> Contactez le destinataire pour organiser sa visite.</p>
+
+    <div class="verification">
+        <p><strong>Token de vérification:</strong></p>
+        <span th:text="${verificationToken}">TOKEN-123</span>
+    </div>
+
+    <p>Utilisez ce token pour vérifier la carte cadeau lors de la visite du client.</p>
+
+    <div class="footer">
+        <p>Système de gestion <span th:text="${appName}">SuccarBanat</span></p>
+    </div>
+</div>
+</body>
+</html>
