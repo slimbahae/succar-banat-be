@@ -32,5 +32,5 @@ ENV SPRING_PROFILES_ACTIVE=prod
 ENV FILE_UPLOAD_DIR=/app/uploads
 
 # Run the jar file
-# Cloud Run provides PORT env var, Spring Boot will use server.port=${PORT:8080}
-CMD ["java", "-Xmx512m", "-Xms256m", "-jar", "target/beauty-center-*.jar"]
+# Use shell form to expand wildcard
+CMD java -Xmx512m -Xms256m -jar target/beauty-center-*.jar
