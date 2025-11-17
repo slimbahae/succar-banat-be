@@ -1,13 +1,311 @@
-<h1>Welcome to <span th:text="${businessName}"></span>! 🎉</h1>
-<p>Dear <span th:text="${firstName}"></span>,</p>
-<p>Welcome to our beauty center! We're thrilled to have you join our community.</p>
-<p>Here's what you can do with your new account:</p>
-<ul>
-    <li>📅 Book appointments online</li>
-    <li>🛍️ Browse and purchase our products</li>
-    <li>💄 Discover our beauty services</li>
-    <li>🎁 Get exclusive offers and promotions</li>
-</ul>
-<p>Ready to get started? Visit our website and explore all we have to offer!</p>
-<p>Thank you for choosing us for your beauty needs.</p>
-<p>Best regards,<br>The <span th:text="${businessName}"></span> Team</p>
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bienvenue chez Succar Banat!</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #374151;
+            background-color: #f9fafb;
+            padding: 20px;
+        }
+
+        .email-wrapper {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .email-container {
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+            overflow: hidden;
+        }
+
+        .email-header {
+            background: linear-gradient(135deg, #ec4899 0%, #be185d 100%);
+            padding: 50px 30px;
+            text-align: center;
+        }
+
+        .logo {
+            font-size: 36px;
+            font-weight: 700;
+            color: #ffffff;
+            letter-spacing: -0.5px;
+            margin-bottom: 12px;
+        }
+
+        .logo-tagline {
+            color: #fce7f3;
+            font-size: 16px;
+            font-weight: 400;
+            margin-bottom: 30px;
+        }
+
+        .welcome-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+        }
+
+        .email-body {
+            padding: 40px 30px;
+        }
+
+        h1 {
+            font-size: 28px;
+            font-weight: 700;
+            color: #111827;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+
+        .greeting {
+            text-align: center;
+            color: #6b7280;
+            font-size: 18px;
+            margin-bottom: 30px;
+        }
+
+        .intro-text {
+            color: #374151;
+            font-size: 15px;
+            line-height: 1.7;
+            margin-bottom: 24px;
+            text-align: center;
+        }
+
+        .features-section {
+            background-color: #f9fafb;
+            border-radius: 8px;
+            padding: 30px;
+            margin: 30px 0;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: start;
+            margin-bottom: 20px;
+        }
+
+        .feature-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .feature-icon {
+            font-size: 24px;
+            margin-right: 16px;
+            min-width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #fce7f3 0%, #fbcfe8 100%);
+            border-radius: 8px;
+        }
+
+        .feature-content {
+            flex: 1;
+        }
+
+        .feature-title {
+            font-weight: 600;
+            color: #111827;
+            margin-bottom: 4px;
+            font-size: 16px;
+        }
+
+        .feature-description {
+            color: #6b7280;
+            font-size: 14px;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 16px 40px;
+            background: linear-gradient(135deg, #ec4899 0%, #be185d 100%);
+            color: #ffffff !important;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 16px;
+            margin: 30px auto;
+            text-align: center;
+            display: block;
+            width: fit-content;
+        }
+
+        .cta-section {
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        .cta-text {
+            color: #6b7280;
+            margin-bottom: 20px;
+        }
+
+        .social-section {
+            text-align: center;
+            padding: 30px;
+            background-color: #f9fafb;
+            border-radius: 8px;
+            margin: 30px 0;
+        }
+
+        .social-title {
+            font-weight: 600;
+            color: #111827;
+            margin-bottom: 16px;
+        }
+
+        .email-footer {
+            background-color: #f9fafb;
+            padding: 30px;
+            text-align: center;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .footer-text {
+            color: #6b7280;
+            font-size: 13px;
+            margin-bottom: 8px;
+        }
+
+        .footer-business-name {
+            color: #ec4899;
+            font-weight: 600;
+        }
+
+        @media only screen and (max-width: 600px) {
+            .email-wrapper {
+                padding: 0;
+            }
+
+            .email-header,
+            .email-body,
+            .email-footer {
+                padding: 30px 20px;
+            }
+
+            .logo {
+                font-size: 30px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            .features-section {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="email-wrapper">
+        <div class="email-container">
+            <!-- Header -->
+            <div class="email-header">
+                <div class="welcome-icon">✨</div>
+                <div class="logo" th:text="${businessName}">Succar Banat</div>
+                <div class="logo-tagline">Centre de Beauté</div>
+            </div>
+
+            <!-- Body -->
+            <div class="email-body">
+                <h1>Bienvenue chez <span th:text="${businessName}">Succar Banat</span>!</h1>
+                <p class="greeting">
+                    Bonjour <span th:text="${firstName}">Client</span>! 💕
+                </p>
+
+                <p class="intro-text">
+                    Nous sommes ravis de vous accueillir dans notre communauté de passionnés de beauté.
+                    Préparez-vous à découvrir une expérience de beauté exceptionnelle!
+                </p>
+
+                <!-- Features Section -->
+                <div class="features-section">
+                    <div class="feature-item">
+                        <div class="feature-icon">💆</div>
+                        <div class="feature-content">
+                            <div class="feature-title">Services de Qualité Premium</div>
+                            <div class="feature-description">
+                                Profitez de nos soins de beauté professionnels avec des spécialistes expérimentés
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="feature-item">
+                        <div class="feature-icon">📅</div>
+                        <div class="feature-content">
+                            <div class="feature-title">Réservation En Ligne Facile</div>
+                            <div class="feature-description">
+                                Réservez vos rendez-vous en quelques clics, 24h/24 et 7j/7
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="feature-item">
+                        <div class="feature-icon">🛍️</div>
+                        <div class="feature-content">
+                            <div class="feature-title">Produits de Beauté Exclusifs</div>
+                            <div class="feature-description">
+                                Découvrez notre sélection de produits de beauté premium disponibles en magasin
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="feature-item">
+                        <div class="feature-icon">⭐</div>
+                        <div class="feature-content">
+                            <div class="feature-title">Expérience Personnalisée</div>
+                            <div class="feature-description">
+                                Chaque visite est adaptée à vos besoins et préférences uniques
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CTA Section -->
+                <div class="cta-section">
+                    <p class="cta-text">Prêt à commencer votre voyage beauté?</p>
+                    <a href="https://succar-banat-fe.vercel.app/services" class="button">
+                        Découvrir Nos Services
+                    </a>
+                </div>
+
+                <!-- Social Section -->
+                <div class="social-section">
+                    <div class="social-title">Suivez-nous pour plus d'inspiration!</div>
+                    <p class="footer-text">
+                        Restez à jour avec nos dernières offres, conseils beauté et nouveautés
+                    </p>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="email-footer">
+                <p class="footer-text">
+                    Cet email a été envoyé par <span class="footer-business-name" th:text="${businessName}">Succar Banat</span>
+                </p>
+                <p class="footer-text">
+                    Si vous avez des questions, n'hésitez pas à nous contacter.
+                </p>
+                <p class="footer-text" style="margin-top: 20px;">
+                    © 2024 <span th:text="${businessName}">Succar Banat</span>. Tous droits réservés.
+                </p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

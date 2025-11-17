@@ -2,164 +2,373 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Reservation Confirmed!</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Réservation Confirmée!</title>
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
-            font-family: Arial, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
             line-height: 1.6;
-            color: #333;
+            color: #374151;
+            background-color: #f9fafb;
+            padding: 20px;
+        }
+
+        .email-wrapper {
             max-width: 600px;
             margin: 0 auto;
-            padding: 20px;
-            background-color: #f5f5f5;
         }
-        .container {
+
+        .email-container {
             background-color: #ffffff;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
             overflow: hidden;
         }
-        .header {
+
+        .email-header {
+            background: linear-gradient(135deg, #ec4899 0%, #be185d 100%);
+            padding: 40px 30px;
             text-align: center;
-            padding: 30px 20px;
-            background-color: #f8f9fa;
-            border-bottom: 1px solid #e0e0e0;
         }
-        .header h1 {
-            font-size: 28px;
-            color: #212121;
-            margin-bottom: 10px;
-        }
-        .header p {
-            font-size: 16px;
-            color: #555;
-        }
-        .reservation-id-box {
-            background-color: #fff;
-            border-radius: 6px;
-            padding: 15px 25px;
-            margin: 20px auto;
-            display: inline-block;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-        }
-        .reservation-id-box p {
-            margin: 0;
-            font-size: 14px;
-            color: #888;
-        }
-        .reservation-id-box strong {
-            font-size: 24px;
-            color: #6a1b9a; /* Primary color hint */
-            display: block;
-        }
-        .section {
-            padding: 20px;
-            border-bottom: 1px solid #eee;
-        }
-        .section:last-child {
-            border-bottom: none;
-        }
-        h2 {
-            font-size: 20px;
-            color: #212121;
-            margin-top: 0;
-            margin-bottom: 15px;
-        }
-        .details-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 10px;
-        }
-        .details-grid p {
-            margin: 0;
-            font-size: 15px;
-            color: #555;
-        }
-        .details-grid strong {
-            color: #212121;
-        }
-        .footer-text {
-            text-align: center;
-            margin-top: 30px;
-            font-size: 12px;
-            color: #888;
-        }
-        .button {
-            display: inline-block;
-            padding: 12px 25px;
-            background-color: #6a1b9a;
+
+        .logo {
+            font-size: 32px;
+            font-weight: 700;
             color: #ffffff;
-            text-decoration: none;
-            border-radius: 5px;
-            margin-top: 25px;
-            font-size: 16px;
-            font-weight: bold;
+            letter-spacing: -0.5px;
+            margin-bottom: 8px;
         }
-        .icon-circle {
-            width: 60px;
-            height: 60px;
-            background-color: #e8f5e9; /* Light green */
+
+        .logo-tagline {
+            color: #fce7f3;
+            font-size: 14px;
+            font-weight: 400;
+        }
+
+        .success-icon {
+            width: 80px;
+            height: 80px;
+            background-color: #10b981;
             border-radius: 50%;
             display: flex;
             align-items: center;
-            justify-content: center;
-            margin: 0 auto 15px;
+            justify-center: center;
+            margin: 30px auto 20px;
         }
-        .icon-circle svg {
-            width: 36px;
-            height: 36px;
-            color: #4CAF50; /* Green */
+
+        .checkmark {
+            color: #ffffff;
+            font-size: 48px;
+            font-weight: bold;
         }
-        .text-green {
-            color: #4CAF50;
+
+        .email-body {
+            padding: 40px 30px;
         }
-        .text-purple {
-            color: #6a1b9a;
+
+        h1 {
+            font-size: 28px;
+            font-weight: 700;
+            color: #111827;
+            margin-bottom: 12px;
+            text-align: center;
         }
-        /* Lucide Icons - simple SVG fallback for email clients */
-        .lucide-icon {
-            width: 20px;
-            height: 20px;
-            vertical-align: middle;
-            margin-right: 5px;
+
+        .greeting {
+            text-align: center;
+            color: #6b7280;
+            font-size: 16px;
+            margin-bottom: 30px;
+        }
+
+        .reservation-id-badge {
+            background: linear-gradient(135deg, #fce7f3 0%, #fbcfe8 100%);
+            border: 2px solid #ec4899;
+            border-radius: 8px;
+            padding: 16px 24px;
+            text-align: center;
+            margin: 24px 0;
+        }
+
+        .reservation-id-label {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #be185d;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .reservation-id {
+            font-size: 24px;
+            font-weight: 700;
+            color: #be185d;
+        }
+
+        .details-section {
+            background-color: #f9fafb;
+            border-radius: 8px;
+            padding: 24px;
+            margin: 24px 0;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #111827;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+        }
+
+        .section-icon {
+            display: inline-block;
+            width: 24px;
+            height: 24px;
+            margin-right: 8px;
+            background-color: #ec4899;
+            border-radius: 4px;
+            text-align: center;
+            line-height: 24px;
+            color: #ffffff;
+            font-size: 14px;
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+
+        .detail-label {
+            color: #6b7280;
+            font-weight: 500;
+        }
+
+        .detail-value {
+            color: #111827;
+            font-weight: 600;
+            text-align: right;
+        }
+
+        .total-row {
+            background-color: #fef3f2;
+            padding: 16px;
+            border-radius: 6px;
+            margin-top: 16px;
+        }
+
+        .total-row .detail-label {
+            font-size: 16px;
+            color: #111827;
+        }
+
+        .total-row .detail-value {
+            font-size: 20px;
+            color: #ec4899;
+        }
+
+        .info-box {
+            background-color: #eff6ff;
+            border-left: 4px solid #3b82f6;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 24px 0;
+        }
+
+        .info-box-title {
+            font-weight: 600;
+            color: #1e40af;
+            margin-bottom: 8px;
+        }
+
+        .info-box ul {
+            margin-left: 20px;
+            color: #1e40af;
+        }
+
+        .info-box li {
+            margin-bottom: 6px;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 14px 32px;
+            background: linear-gradient(135deg, #ec4899 0%, #be185d 100%);
+            color: #ffffff !important;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 15px;
+            margin: 20px auto;
+            text-align: center;
+            display: block;
+            width: fit-content;
+        }
+
+        .contact-section {
+            text-align: center;
+            margin: 30px 0;
+            padding: 20px;
+            background-color: #f9fafb;
+            border-radius: 8px;
+        }
+
+        .contact-section p {
+            color: #6b7280;
+            margin-bottom: 8px;
+        }
+
+        .email-footer {
+            background-color: #f9fafb;
+            padding: 30px;
+            text-align: center;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .footer-text {
+            color: #6b7280;
+            font-size: 13px;
+            margin-bottom: 8px;
+        }
+
+        .footer-business-name {
+            color: #ec4899;
+            font-weight: 600;
+        }
+
+        @media only screen and (max-width: 600px) {
+            .email-wrapper {
+                padding: 0;
+            }
+
+            .email-header,
+            .email-body,
+            .email-footer {
+                padding: 30px 20px;
+            }
+
+            .logo {
+                font-size: 28px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            .details-section {
+                padding: 16px;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <div class="icon-circle">
-                <svg class="lucide-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><path d="m9 11 3 3L22 4"></path></svg>
+    <div class="email-wrapper">
+        <div class="email-container">
+            <!-- Header -->
+            <div class="email-header">
+                <div class="logo">Succar Banat</div>
+                <div class="logo-tagline">Centre de Beauté</div>
+                <div class="success-icon">
+                    <span class="checkmark">✓</span>
+                </div>
             </div>
-            <h1>Reservation Confirmed! 🎉</h1>
-            <p th:text="'Thank you for booking with Beauty Center, ' + ${reservation.customerName} + '!'"></p>
-            <div class="reservation-id-box">
-                <p>Reservation ID</p>
-                <strong th:text="'#' + ${reservation.id.substring(reservation.id.length() - 8)}">#12345678</strong>
-            </div>
-        </div>
 
-        <div class="section">
-            <h2>Reservation Details</h2>
-            <div class="details-grid">
-                <p><strong>Service:</strong> <span th:text="${reservation.serviceName}">Service Name</span></p>
-                <p><strong>Date:</strong> <span th:text="${reservationDateFormatted}">Date</span></p>
-                <p><strong>Time Slot:</strong> <span th:text="${reservation.timeSlot}">Time Slot</span></p>
-                <p><strong>Staff Member:</strong> <span th:text="${reservation.staffName}">Staff Name</span></p>
-                <p><strong>Total Amount:</strong> $<span th:text="${#numbers.formatDecimal(reservation.totalAmount, 1, 2)}">0.00</span></p>
-            </div>
-            
-            <p style="margin-top: 20px;">Please arrive 10 minutes before your scheduled time. If you need to reschedule or cancel your appointment, please do so at least 24 hours in advance.</p>
-            
-            <p>If you have any questions about your reservation, please don't hesitate to contact us.</p>
-            
-            <a href="http://beautycenter.com/customer/reservations" class="button">View Reservation Details</a>
-        </div>
+            <!-- Body -->
+            <div class="email-body">
+                <h1>Réservation Confirmée!</h1>
+                <p class="greeting">
+                    Merci <span th:text="${reservation.customerName}">Client</span> pour votre réservation chez Succar Banat! 💕
+                </p>
 
-        <div class="footer-text">
-            <p>This is an automated message, please do not reply to this email.</p>
-            <p>&copy; 2024 Beauty Center. All rights reserved.</p>
+                <!-- Reservation ID Badge -->
+                <div class="reservation-id-badge">
+                    <div class="reservation-id-label">Numéro de Réservation</div>
+                    <div class="reservation-id" th:text="'#' + ${reservation.id.substring(reservation.id.length() - 8)}">#12345678</div>
+                </div>
+
+                <!-- Reservation Details -->
+                <div class="details-section">
+                    <div class="section-title">
+                        <span class="section-icon">📅</span>
+                        Détails de votre Réservation
+                    </div>
+
+                    <div class="detail-row">
+                        <span class="detail-label">Service</span>
+                        <span class="detail-value" th:text="${reservation.serviceName}">Service Name</span>
+                    </div>
+
+                    <div class="detail-row">
+                        <span class="detail-label">Date</span>
+                        <span class="detail-value" th:text="${reservationDateFormatted}">Date</span>
+                    </div>
+
+                    <div class="detail-row">
+                        <span class="detail-label">Créneau Horaire</span>
+                        <span class="detail-value" th:text="${reservation.timeSlot}">Morning</span>
+                    </div>
+
+                    <div class="detail-row">
+                        <span class="detail-label">Spécialiste</span>
+                        <span class="detail-value" th:text="${reservation.staffName}">Staff Name</span>
+                    </div>
+
+                    <div class="total-row">
+                        <div class="detail-row" style="border: none; padding: 0;">
+                            <span class="detail-label">Montant Total</span>
+                            <span class="detail-value"><span th:text="${#numbers.formatDecimal(reservation.totalAmount, 1, 2)}">0.00</span>€</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Important Information -->
+                <div class="info-box">
+                    <div class="info-box-title">📌 Informations Importantes</div>
+                    <ul>
+                        <li>Veuillez arriver 15 minutes avant votre rendez-vous</li>
+                        <li>Annulation gratuite jusqu'à 24 heures avant</li>
+                        <li>Vous recevrez un rappel par SMS</li>
+                        <li>Les retards peuvent réduire le temps de service</li>
+                    </ul>
+                </div>
+
+                <!-- Action Button -->
+                <a href="https://succar-banat-fe.vercel.app/customer/reservations" class="button">
+                    Voir Mes Réservations
+                </a>
+
+                <!-- Contact Section -->
+                <div class="contact-section">
+                    <p><strong>Besoin d'aide?</strong></p>
+                    <p>Notre équipe est à votre disposition pour toute question concernant votre réservation.</p>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="email-footer">
+                <p class="footer-text">
+                    Cet email a été envoyé par <span class="footer-business-name">Succar Banat</span>
+                </p>
+                <p class="footer-text">
+                    Ceci est un message automatique, merci de ne pas y répondre.
+                </p>
+                <p class="footer-text" style="margin-top: 20px;">
+                    © 2024 Succar Banat. Tous droits réservés.
+                </p>
+            </div>
         </div>
     </div>
 </body>
-</html> 
+</html>
