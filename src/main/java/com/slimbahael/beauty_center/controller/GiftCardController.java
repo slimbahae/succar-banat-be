@@ -34,47 +34,14 @@ public class GiftCardController {
     private final StripeService stripeService;
     private final UserRepository userRepository;
 
+    // GIFT CARD PURCHASE/REDEMPTION DISABLED - Purchases and balance redemption temporarily unavailable
+
     @PostMapping("/customer/gift-cards/create-payment-intent")
     @PreAuthorize("hasRole('CUSTOMER')")
     public ResponseEntity<PaymentIntentResponse> createGiftCardPaymentIntent(
             @Valid @RequestBody GiftCardPurchaseRequest request,
             Authentication authentication) {
-
-        try {
-            // Get current user
-            User user = userRepository.findByEmail(authentication.getName())
-                    .orElseThrow(() -> new ResourceNotFoundException("User not found"));
-
-            // Build payment intent
-            PaymentIntentRequest paymentRequest = new PaymentIntentRequest();
-            paymentRequest.setAmount(request.getAmount());
-            paymentRequest.setDescription("Gift Card Purchase - " + request.getType() + " - " + request.getAmount() + "€");
-            paymentRequest.setCustomerEmail(request.getPurchaserEmail());
-            paymentRequest.setUserId(user.getId());
-
-            // Add metadata for tracking
-            Map<String, String> metadata = new HashMap<>();
-            metadata.put("gift_card_type", request.getType());
-            metadata.put("purchaser_email", request.getPurchaserEmail());
-            metadata.put("recipient_email", request.getRecipientEmail());
-            metadata.put("purchaser_name", request.getPurchaserName());
-            metadata.put("recipient_name", request.getRecipientName());
-            if (request.getMessage() != null && !request.getMessage().trim().isEmpty()) {
-                metadata.put("message", request.getMessage());
-            }
-            // **Attach metadata to the request**
-            paymentRequest.setMetadata(metadata);
-
-            PaymentIntentResponse response = stripeService.createPaymentIntent(paymentRequest);
-
-            log.info("Payment intent created for gift card: {} - Amount: {}€",
-                    response.getPaymentIntentId(), request.getAmount());
-
-            return ResponseEntity.ok(response);
-        } catch (Exception e) {
-            log.error("Failed to create payment intent for gift card: {}", e.getMessage(), e);
-            throw new BadRequestException("Failed to create payment intent: " + e.getMessage());
-        }
+        throw new BadRequestException("Les achats de cartes cadeaux sont temporairement désactivés. Nos produits sont disponibles en magasin.");
     }
 
     @PostMapping("/customer/gift-cards/purchase")
@@ -82,47 +49,13 @@ public class GiftCardController {
     public ResponseEntity<GiftCard> purchaseGiftCard(
             @Valid @RequestBody GiftCardPurchaseRequest request,
             Authentication authentication) {
-
-        // Ensure the purchaserEmail matches the authenticated user
-        User user = userRepository.findByEmail(authentication.getName())
-                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
-        request.setPurchaserEmail(user.getEmail());
-
-        try {
-            GiftCard createdGiftCard = giftCardService.createGiftCard(request);
-            log.info("Gift card purchased successfully: {} by {}",
-                    createdGiftCard.getId(), user.getEmail());
-            return ResponseEntity.ok(createdGiftCard);
-        } catch (Exception e) {
-            log.error("Failed to purchase gift card: {}", e.getMessage(), e);
-            throw e;
-        }
+        throw new BadRequestException("Les achats de cartes cadeaux sont temporairement désactivés. Nos produits sont disponibles en magasin.");
     }
 
     @GetMapping("/customer/gift-cards/payment-status/{paymentIntentId}")
     @PreAuthorize("hasRole('CUSTOMER')")
     public ResponseEntity<Map<String, Object>> getGiftCardPaymentStatus(@PathVariable String paymentIntentId) {
-        try {
-            String status = stripeService.getPaymentStatus(paymentIntentId);
-            Map<String, Object> response = new HashMap<>();
-            response.put("payment_intent_id", paymentIntentId);
-            response.put("status", status);
-            response.put("is_succeeded", "succeeded".equals(status));
-
-            try {
-                GiftCard giftCard = giftCardService.getGiftCardByPaymentIntent(paymentIntentId);
-                response.put("gift_card_id", giftCard.getId());
-                response.put("gift_card_status", giftCard.getStatus());
-            } catch (ResourceNotFoundException e) {
-                response.put("gift_card_id", null);
-                response.put("gift_card_status", null);
-            }
-
-            return ResponseEntity.ok(response);
-        } catch (Exception e) {
-            log.error("Failed to get payment status for: {}", paymentIntentId, e);
-            throw new BadRequestException("Failed to get payment status: " + e.getMessage());
-        }
+        throw new BadRequestException("Les achats de cartes cadeaux sont temporairement désactivés. Nos produits sont disponibles en magasin.");
     }
 
     @PostMapping("/customer/gift-cards/redeem")
@@ -133,18 +66,7 @@ public class GiftCardController {
             @RequestHeader(value = "X-Forwarded-For", required = false) String ipAddressHeader,
             @RequestHeader(value = "X-Real-IP", required = false) String realIpHeader,
             @RequestHeader(value = "Remote_Addr", required = false) String remoteAddrHeader) {
-
-        User user = userRepository.findByEmail(authentication.getName())
-                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
-
-        String ipAddress = ipAddressHeader != null ? ipAddressHeader
-                : realIpHeader != null ? realIpHeader
-                : remoteAddrHeader != null ? remoteAddrHeader
-                : "UNKNOWN";
-
-        BalanceTransaction transaction = giftCardService
-                .redeemGiftCard(request.getCode(), user.getId(), ipAddress);
-        return ResponseEntity.ok(transaction);
+        throw new BadRequestException("Le système de solde est temporairement désactivé. Les cartes cadeaux ne peuvent pas être échangées contre du solde.");
     }
 
     @GetMapping("/customer/gift-cards/purchased")
@@ -169,19 +91,7 @@ public class GiftCardController {
     @PreAuthorize("hasRole('CUSTOMER')")
     public ResponseEntity<Map<String, String>> cancelGiftCardPayment(
             @PathVariable String paymentIntentId) {
-        try {
-            stripeService.cancelPaymentIntent(paymentIntentId);
-            giftCardService.cancelGiftCardForFailedPayment(paymentIntentId);
-            log.info("Gift card payment cancelled: {}", paymentIntentId);
-
-            return ResponseEntity.ok(Map.of(
-                    "message", "Payment cancelled successfully",
-                    "payment_intent_id", paymentIntentId
-            ));
-        } catch (Exception e) {
-            log.error("Failed to cancel gift card payment: {}", paymentIntentId, e);
-            throw new BadRequestException("Failed to cancel payment: " + e.getMessage());
-        }
+        throw new BadRequestException("Les achats de cartes cadeaux sont temporairement désactivés. Nos produits sont disponibles en magasin.");
     }
 
     // Admin endpoints

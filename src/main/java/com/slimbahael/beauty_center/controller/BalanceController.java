@@ -32,28 +32,17 @@ public class BalanceController {
     private final UserRepository userRepository;
     private final StripeService stripeService;
 
+    // BALANCE FUNCTIONALITY DISABLED - Balance system temporarily unavailable
     @GetMapping("/customer/balance")
     @PreAuthorize("hasRole('CUSTOMER')")
     public ResponseEntity<Map<String, Object>> getCustomerBalance(Authentication authentication) {
-        User user = userRepository.findByEmail(authentication.getName())
-                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
-        BigDecimal balance = balanceService.getUserBalance(user.getId());
-
-        Map<String, Object> result = new HashMap<>();
-        result.put("balance", balance);
-        result.put("formatted", String.format("€%.2f", balance));
-        result.put("lastUpdated", user.getLastBalanceUpdate()); // may be null, which is okay with HashMap
-
-        return ResponseEntity.ok(result);
+        throw new BadRequestException("Le système de solde est temporairement désactivé.");
     }
 
     @GetMapping("/customer/balance/transactions")
     @PreAuthorize("hasRole('CUSTOMER')")
     public ResponseEntity<List<BalanceTransaction>> getCustomerTransactionHistory(Authentication authentication) {
-        User user = userRepository.findByEmail(authentication.getName())
-                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
-        List<BalanceTransaction> transactions = balanceService.getUserTransactionHistory(user.getId());
-        return ResponseEntity.ok(transactions);
+        throw new BadRequestException("Le système de solde est temporairement désactivé.");
     }
 
     @PostMapping("/customer/balance/create-payment-intent")
@@ -61,17 +50,7 @@ public class BalanceController {
             @RequestBody PaymentIntentRequest request,
             Principal principal
     ) {
-        // 1) Look up the user
-        String email = principal.getName();
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("User not found: " + email));
-
-        // 2) **Populate the metadata fields** before handing off to StripeService
-        request.setUserId(user.getId());
-        request.setCustomerEmail(user.getEmail());
-
-        // 3) Now the metadata map in StripeService.createPaymentIntent() will contain them
-        return stripeService.createPaymentIntent(request);
+        throw new BadRequestException("Le système de solde est temporairement désactivé.");
     }
 
     @GetMapping("/admin/users/{userId}/balance")
@@ -117,22 +96,7 @@ public class BalanceController {
     public ResponseEntity<BalanceTransaction> topUpBalance(
             @Valid @RequestBody Map<String, String> request,
             Authentication authentication) {
-
-        // 1) pull the PaymentIntent ID from the JSON body
-        String paymentIntentId = request.get("paymentIntentId");
-        if (paymentIntentId == null || paymentIntentId.isBlank()) {
-            throw new BadRequestException("paymentIntentId is required");
-        }
-
-        // 2) resolve current user
-        User user = userRepository.findByEmail(authentication.getName())
-                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
-
-        // 3) delegate to your service (which does fetch + verify + idempotency + credit)
-        BalanceTransaction tx = balanceService.creditBalanceFromIntent(user.getId(), paymentIntentId);
-
-        // 4) return the recorded transaction
-        return ResponseEntity.ok(tx);
+        throw new BadRequestException("Le système de solde est temporairement désactivé.");
     }
 
     @GetMapping("/admin/users/{userId}/balance/transactions")

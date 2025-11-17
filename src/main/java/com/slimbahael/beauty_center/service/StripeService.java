@@ -5,10 +5,13 @@ import com.slimbahael.beauty_center.dto.PaymentIntentResponse;
 import com.slimbahael.beauty_center.exception.BadRequestException;
 import com.stripe.exception.StripeException;
 import com.stripe.model.PaymentIntent;
+import com.stripe.model.checkout.Session;
 import com.stripe.param.PaymentIntentCreateParams;
 import com.stripe.param.PaymentIntentConfirmParams;
+import com.stripe.param.checkout.SessionCreateParams;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -19,6 +22,53 @@ import java.util.Map;
 @RequiredArgsConstructor
 @Slf4j
 public class StripeService {
+
+    @Value("${app.frontend.url:https://succar-banat-fe.vercel.app}")
+    private String frontendUrl;
+
+    /**
+     * Create a Stripe Checkout Session for reservations
+     */
+    public Session createCheckoutSession(String reservationId, BigDecimal amount, String customerEmail, String description) {
+        try {
+            long amountInCents = amount.multiply(BigDecimal.valueOf(100)).longValue();
+
+            SessionCreateParams params = SessionCreateParams.builder()
+                    .setMode(SessionCreateParams.Mode.PAYMENT)
+                    .setSuccessUrl(frontendUrl + "/reservation/success?session_id={CHECKOUT_SESSION_ID}")
+                    .setCancelUrl(frontendUrl + "/reservation/cancel")
+                    .setCustomerEmail(customerEmail)
+                    .addLineItem(
+                            SessionCreateParams.LineItem.builder()
+                                    .setPriceData(
+                                            SessionCreateParams.LineItem.PriceData.builder()
+                                                    .setCurrency("eur")
+                                                    .setUnitAmount(amountInCents)
+                                                    .setProductData(
+                                                            SessionCreateParams.LineItem.PriceData.ProductData.builder()
+                                                                    .setName("Réservation - " + (description != null ? description : "Service"))
+                                                                    .setDescription(description)
+                                                                    .build()
+                                                    )
+                                                    .build()
+                                    )
+                                    .setQuantity(1L)
+                                    .build()
+                    )
+                    .putMetadata("reservation_id", reservationId)
+                    .putMetadata("customer_email", customerEmail)
+                    .build();
+
+            Session session = Session.create(params);
+            log.info("Created Stripe Checkout Session: {} for reservation: {}", session.getId(), reservationId);
+
+            return session;
+
+        } catch (StripeException e) {
+            log.error("Failed to create checkout session: {}", e.getMessage(), e);
+            throw new BadRequestException("Failed to create checkout session: " + e.getMessage());
+        }
+    }
 
     /**
      * Create a payment intent for the given amount in EUR

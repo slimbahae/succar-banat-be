@@ -2,6 +2,7 @@ package com.slimbahael.beauty_center.controller;
 
 import com.slimbahael.beauty_center.dto.CheckoutRequest;
 import com.slimbahael.beauty_center.dto.OrderResponse;
+import com.slimbahael.beauty_center.exception.BadRequestException;
 import com.slimbahael.beauty_center.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -34,34 +35,29 @@ public class OrderController {
         return ResponseEntity.ok(orderService.updateOrderStatus(id, status));
     }
 
-    // Customer endpoints
+    // Customer endpoints - DISABLED (Products available in store only)
     @GetMapping("/api/customer/orders")
     @PreAuthorize("hasRole('CUSTOMER')")
     public ResponseEntity<List<OrderResponse>> getCustomerOrders() {
-        return ResponseEntity.ok(orderService.getCustomerOrders());
+        throw new BadRequestException("Les achats en ligne sont temporairement désactivés. Nos produits sont disponibles en magasin.");
     }
 
     @GetMapping("/api/customer/orders/{id}")
     @PreAuthorize("hasRole('CUSTOMER')")
     public ResponseEntity<OrderResponse> getOrderById(@PathVariable String id) {
-        return ResponseEntity.ok(orderService.getOrderById(id));
+        throw new BadRequestException("Les achats en ligne sont temporairement désactivés. Nos produits sont disponibles en magasin.");
     }
 
     @PostMapping("/api/customer/checkout")
     @PreAuthorize("hasRole('CUSTOMER')")
     public ResponseEntity<OrderResponse> checkout(@Valid @RequestBody CheckoutRequest request) {
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(orderService.checkout(request));
+        throw new BadRequestException("Les achats en ligne sont temporairement désactivés. Nos produits sont disponibles en magasin.");
     }
 
     @GetMapping("/api/customer/orders/{id}/invoice")
     @PreAuthorize("hasRole('CUSTOMER')")
     public ResponseEntity<byte[]> getInvoice(@PathVariable String id) {
-        byte[] invoice = orderService.generateInvoice(id);
-        return ResponseEntity.ok()
-                .header("Content-Type", "application/pdf")
-                .header("Content-Disposition", "attachment; filename=invoice-" + id + ".pdf")
-                .body(invoice);
+        throw new BadRequestException("Les achats en ligne sont temporairement désactivés. Nos produits sont disponibles en magasin.");
     }
 
 
