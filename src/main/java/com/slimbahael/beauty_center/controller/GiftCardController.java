@@ -34,31 +34,35 @@ public class GiftCardController {
     private final StripeService stripeService;
     private final UserRepository userRepository;
 
-    // GIFT CARD PURCHASE - Using Stripe Checkout for reservations only (not balance)
+    // PUBLIC GIFT CARD PURCHASE - No account required
 
-    @PostMapping("/customer/gift-cards/checkout")
-    @PreAuthorize("hasRole('CUSTOMER')")
-    public ResponseEntity<CheckoutSessionResponse> createGiftCardCheckoutSession(
-            @Valid @RequestBody GiftCardPurchaseRequest request,
-            Authentication authentication) {
-
-        // Get current user
-        User user = userRepository.findByEmail(authentication.getName())
-                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+    @PostMapping("/public/gift-cards/checkout")
+    public ResponseEntity<CheckoutSessionResponse> createPublicGiftCardCheckoutSession(
+            @Valid @RequestBody GiftCardPurchaseRequest request) {
 
         // Validate request
         if (request.getAmount() == null || request.getAmount().compareTo(BigDecimal.ZERO) <= 0) {
             throw new BadRequestException("Le montant doit être supérieur à zéro");
         }
 
-        // Set purchaser info
-        request.setPurchaserEmail(user.getEmail());
+        if (request.getPurchaserEmail() == null || request.getPurchaserEmail().isEmpty()) {
+            throw new BadRequestException("L'email de l'acheteur est requis");
+        }
+
         if (request.getPurchaserName() == null || request.getPurchaserName().isEmpty()) {
-            request.setPurchaserName(user.getFirstName() + " " + user.getLastName());
+            throw new BadRequestException("Le nom de l'acheteur est requis");
+        }
+
+        if (request.getRecipientEmail() == null || request.getRecipientEmail().isEmpty()) {
+            throw new BadRequestException("L'email du destinataire est requis");
+        }
+
+        if (request.getRecipientName() == null || request.getRecipientName().isEmpty()) {
+            throw new BadRequestException("Le nom du destinataire est requis");
         }
 
         try {
-            // Create pending gift card first to get the ID
+            // Create pending gift card
             GiftCard giftCard = giftCardService.createPendingGiftCard(request);
 
             // Create Stripe Checkout Session
@@ -66,17 +70,17 @@ public class GiftCardController {
             Session session = stripeService.createGiftCardCheckoutSession(
                     giftCard.getId(),
                     request.getAmount(),
-                    user.getEmail(),
+                    request.getPurchaserEmail(),
                     description
             );
 
-            log.info("Created checkout session for gift card: {} - Amount: {}€",
+            log.info("Created public checkout session for gift card: {} - Amount: {}€",
                     giftCard.getId(), request.getAmount());
 
             return ResponseEntity.ok(CheckoutSessionResponse.builder()
                     .sessionId(session.getId())
                     .sessionUrl(session.getUrl())
-                    .reservationId(giftCard.getId())  // Using for gift card ID
+                    .reservationId(giftCard.getId())
                     .build());
 
         } catch (Exception e) {
@@ -85,14 +89,11 @@ public class GiftCardController {
         }
     }
 
-    @PostMapping("/customer/gift-cards/verify-payment/{sessionId}")
-    @PreAuthorize("hasRole('CUSTOMER')")
-    public ResponseEntity<Map<String, Object>> verifyGiftCardPayment(
-            @PathVariable String sessionId,
-            Authentication authentication) {
+    @PostMapping("/public/gift-cards/verify-payment/{sessionId}")
+    public ResponseEntity<Map<String, Object>> verifyPublicGiftCardPayment(
+            @PathVariable String sessionId) {
 
         try {
-            // Verify and complete gift card purchase
             GiftCard giftCard = giftCardService.completeGiftCardPurchase(sessionId);
 
             Map<String, Object> response = new HashMap<>();
@@ -180,10 +181,34 @@ public class GiftCardController {
     }
 
     // Admin endpoints
-    @GetMapping("/admin/gift-cards/verify")
+    @PostMapping("/admin/gift-cards/verify-code")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<GiftCard> verifyGiftCard(@RequestParam String token) {
-        return ResponseEntity.ok(giftCardService.verifyGiftCardForAdmin(token));
+    public ResponseEntity<Map<String, Object>> verifyGiftCardByCode(
+            @RequestBody Map<String, String> request) {
+        String code = request.get("code");
+        if (code == null || code.isEmpty()) {
+            throw new BadRequestException("Le code de la carte cadeau est requis");
+        }
+
+        try {
+            GiftCard giftCard = giftCardService.verifyGiftCardForAdmin(code);
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("valid", true);
+            response.put("gift_card_id", giftCard.getId());
+            response.put("amount", giftCard.getAmount());
+            response.put("status", giftCard.getStatus());
+            response.put("purchaser_name", giftCard.getPurchaserName());
+            response.put("purchaser_email", giftCard.getPurchaserEmail());
+            response.put("recipient_name", giftCard.getRecipientName());
+            response.put("recipient_email", giftCard.getRecipientEmail());
+            response.put("expiration_date", giftCard.getExpirationDate());
+            response.put("message", "Carte cadeau valide");
+
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            throw new BadRequestException("Carte cadeau invalide ou expirée");
+        }
     }
 
     @PostMapping("/admin/gift-cards/{giftCardId}/mark-used")

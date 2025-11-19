@@ -79,8 +79,8 @@ public class StripeService {
 
             SessionCreateParams params = SessionCreateParams.builder()
                     .setMode(SessionCreateParams.Mode.PAYMENT)
-                    .setSuccessUrl(frontendUrl + "/customer/giftcard-success?session_id={CHECKOUT_SESSION_ID}")
-                    .setCancelUrl(frontendUrl + "/customer/giftcard-purchase")
+                    .setSuccessUrl(frontendUrl + "/giftcard-success?session_id={CHECKOUT_SESSION_ID}")
+                    .setCancelUrl(frontendUrl + "/giftcard-purchase")
                     .setCustomerEmail(customerEmail)
                     .addLineItem(
                             SessionCreateParams.LineItem.builder()

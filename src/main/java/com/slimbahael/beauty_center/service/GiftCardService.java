@@ -179,23 +179,27 @@ public class GiftCardService {
         return transaction;
     }
 
-    public GiftCard verifyGiftCardForAdmin(String verificationToken) {
-        GiftCard giftCard = giftCardRepository.findByVerificationToken(verificationToken)
-                .orElseThrow(() -> new ResourceNotFoundException("Token de vérification invalide"));
+    public GiftCard verifyGiftCardForAdmin(String code) {
+        // Find gift card by code
+        Optional<GiftCard> giftCardOpt = findGiftCardByCode(code);
 
-        // Update verification attempts
-        giftCard.setVerificationAttempts(giftCard.getVerificationAttempts() + 1);
-        giftCard.setLastVerificationAttempt(new Date());
-
-        if (giftCard.getVerificationAttempts() > MAX_VERIFICATION_ATTEMPTS) {
-            giftCard.setIsLocked(true);
-            giftCard.setLockedAt(new Date());
-            giftCard.setLockedReason("Trop de tentatives de vérification");
-            log.warn("Gift card locked due to excessive verification attempts: {}", giftCard.getId());
+        if (giftCardOpt.isEmpty()) {
+            throw new ResourceNotFoundException("Code de carte cadeau invalide");
         }
 
-        giftCardRepository.save(giftCard);
+        GiftCard giftCard = giftCardOpt.get();
 
+        // Check if card is active
+        if (!"ACTIVE".equals(giftCard.getStatus())) {
+            throw new BadRequestException("Cette carte cadeau n'est plus active (statut: " + giftCard.getStatus() + ")");
+        }
+
+        // Check expiration
+        if (giftCard.getExpirationDate().before(new Date())) {
+            throw new BadRequestException("Cette carte cadeau a expiré");
+        }
+
+        log.info("Admin verified gift card: {} - Amount: {}€", giftCard.getId(), giftCard.getAmount());
         return giftCard;
     }
 
