@@ -375,7 +375,7 @@ public class GiftCardService {
         // Create pending gift card
         GiftCard giftCard = GiftCard.builder()
                 .codeHash(codeHash)
-                .code(rawCode)  // Store temporarily for Stripe session
+                .pendingCode(rawCode)  // Store temporarily until emails are sent
                 .type(request.getType())
                 .amount(request.getAmount())
                 .status("PENDING")  // Will be activated after payment
@@ -423,15 +423,17 @@ public class GiftCardService {
                 return giftCard;  // Already processed
             }
 
-            // Activate the gift card
+            // Get the stored code before clearing
+            String code = giftCard.getPendingCode();
+
+            // Activate the gift card and clear pending code
             giftCard.setStatus("ACTIVE");
             giftCard.setPaymentIntentId(session.getPaymentIntent());
+            giftCard.setPendingCode(null);  // Clear it from database for security
             giftCard = giftCardRepository.save(giftCard);
 
             // Send confirmation emails
             try {
-                String code = giftCard.getCode();  // Get the stored code
-                giftCard.setCode(null);  // Clear it from object (still in DB)
                 emailService.sendGiftCardPurchaseConfirmation(
                         giftCard.getPurchaserEmail(),
                         giftCard,
@@ -442,6 +444,8 @@ public class GiftCardService {
                         giftCard,
                         code
                 );
+                log.info("Sent gift card emails to purchaser {} and recipient {}",
+                        giftCard.getPurchaserEmail(), giftCard.getRecipientEmail());
             } catch (Exception e) {
                 log.error("Failed to send gift card emails: {}", e.getMessage(), e);
             }

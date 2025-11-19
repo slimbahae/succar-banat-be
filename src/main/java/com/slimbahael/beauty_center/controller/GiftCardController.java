@@ -98,9 +98,8 @@ public class GiftCardController {
             Map<String, Object> response = new HashMap<>();
             response.put("success", true);
             response.put("gift_card_id", giftCard.getId());
-            response.put("code", giftCard.getCode());
             response.put("amount", giftCard.getAmount());
-            response.put("message", "Carte cadeau achetée avec succès!");
+            response.put("message", "Carte cadeau achetée avec succès! Le code a été envoyé par email.");
 
             return ResponseEntity.ok(response);
         } catch (Exception e) {
@@ -126,7 +125,6 @@ public class GiftCardController {
             Map<String, Object> response = new HashMap<>();
             response.put("valid", true);
             response.put("gift_card_id", giftCard.getId());
-            response.put("code", giftCard.getCode());
             response.put("amount", giftCard.getAmount());
             response.put("recipient_email", giftCard.getRecipientEmail());
             response.put("message", "Carte cadeau valide! Peut être utilisée pour les réservations.");
