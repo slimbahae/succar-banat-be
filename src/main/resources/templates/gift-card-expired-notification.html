@@ -3,37 +3,60 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Carte cadeau expirée</title>
+    <title>Carte cadeau expiree</title>
     <style>
-        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px; }
-        .header { background: linear-gradient(135deg, #6c757d 0%, #495057 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
-        .content { background: white; padding: 30px; border: 1px solid #ddd; border-radius: 0 0 10px 10px; }
-        .warning { background: #fff3cd; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #ffc107; }
-        .amount { font-size: 20px; font-weight: bold; color: #6c757d; }
-        .footer { text-align: center; margin-top: 30px; font-size: 12px; color: #666; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; line-height: 1.6; color: #374151; background-color: #f9fafb; padding: 20px; }
+        .email-wrapper { max-width: 600px; margin: 0 auto; }
+        .email-container { background-color: #ffffff; border-radius: 12px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07); overflow: hidden; }
+        .header { background: linear-gradient(135deg, #ec4899 0%, #be185d 100%); color: white; padding: 40px 30px; text-align: center; }
+        .header h1 { font-size: 28px; margin-bottom: 8px; }
+        .header p { color: #fce7f3; font-size: 14px; }
+        .content { padding: 40px 30px; }
+        .warning-box { background-color: #fef3c7; border-left: 4px solid #f59e0b; padding: 20px; border-radius: 8px; margin: 24px 0; }
+        .details-box { background-color: #fdf2f8; border-left: 4px solid #ec4899; padding: 20px; border-radius: 8px; margin: 24px 0; }
+        .details-box p { margin: 8px 0; font-size: 14px; }
+        .details-box strong { color: #111827; }
+        .button { display: inline-block; background: linear-gradient(135deg, #ec4899 0%, #be185d 100%); color: #ffffff !important; padding: 14px 32px; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 15px; margin: 20px 0; }
+        .footer { background-color: #f9fafb; padding: 30px; text-align: center; border-top: 1px solid #e5e7eb; }
+        .footer p { color: #6b7280; font-size: 13px; margin: 4px 0; }
+        .footer-brand { color: #ec4899; font-weight: 600; }
     </style>
 </head>
 <body>
-<div class="header">
-    <h1>⏰ Carte cadeau expirée</h1>
-    <p>Information importante</p>
-</div>
+<div class="email-wrapper">
+    <div class="email-container">
+        <div class="header">
+            <h1>Carte cadeau expiree</h1>
+            <p>Votre carte cadeau n'est plus valable</p>
+        </div>
 
-<div class="content">
-    <p>Bonjour,</p>
+        <div class="content">
+            <p>Bonjour,</p>
 
-    <div class="warning">
-        <h3>⚠️ Carte cadeau expirée</h3>
-        <p>Nous vous informons que votre carte cadeau a expiré.</p>
-        <p><strong>Valeur:</strong> <span class="amount" th:text="${amount}">50.00€</span></p>
-        <p><strong>Date d'expiration:</strong> <span th:text="${expirationDate}">31/12/2024</span></p>
-    </div>
+            <div class="warning-box">
+                <p style="color: #92400e;"><strong>Votre carte cadeau a expire.</strong></p>
+                <p style="color: #92400e; margin-top: 8px; font-size: 14px;">Malheureusement, la carte cadeau ci-dessous n'est plus utilisable car elle a depasse sa date d'expiration.</p>
+            </div>
 
-    <p>Malheureusement, cette carte cadeau ne peut plus être utilisée.</p>
-    <p>Pour toute question, n'hésitez pas à nous contacter.</p>
+            <div class="details-box">
+                <h3 style="color: #be185d; margin-bottom: 12px; font-size: 16px;">Details de la carte cadeau</h3>
+                <p><strong>Montant:</strong> <span th:text="${amount}">50.00EUR</span></p>
+                <p><strong>Date d'expiration:</strong> <span th:text="${expirationDate}">31/12/2024</span></p>
+            </div>
 
-    <div class="footer">
-        <p>L'équipe <span th:text="${appName}">SuccarBanat</span></p>
+            <p>Vous souhaitez offrir une nouvelle carte cadeau ? Visitez notre site pour en acheter une nouvelle, valable pour les reservations de services.</p>
+
+            <div style="text-align: center;">
+                <a th:href="${frontendUrl + '/customer/giftcard-purchase'}" class="button">Acheter une nouvelle carte</a>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>Cordialement,</p>
+            <p>L'equipe <span class="footer-brand" th:text="${businessName}">Succar Banat</span></p>
+            <p style="margin-top: 16px;">© 2024 <span th:text="${businessName}">Succar Banat</span>. Tous droits reserves.</p>
+        </div>
     </div>
 </div>
 </body>
