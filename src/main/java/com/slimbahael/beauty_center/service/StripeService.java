@@ -71,6 +71,50 @@ public class StripeService {
     }
 
     /**
+     * Create a Stripe Checkout Session for gift card purchases
+     */
+    public Session createGiftCardCheckoutSession(String giftCardId, BigDecimal amount, String customerEmail, String description) {
+        try {
+            long amountInCents = amount.multiply(BigDecimal.valueOf(100)).longValue();
+
+            SessionCreateParams params = SessionCreateParams.builder()
+                    .setMode(SessionCreateParams.Mode.PAYMENT)
+                    .setSuccessUrl(frontendUrl + "/customer/giftcard-success?session_id={CHECKOUT_SESSION_ID}")
+                    .setCancelUrl(frontendUrl + "/customer/giftcard-purchase")
+                    .setCustomerEmail(customerEmail)
+                    .addLineItem(
+                            SessionCreateParams.LineItem.builder()
+                                    .setPriceData(
+                                            SessionCreateParams.LineItem.PriceData.builder()
+                                                    .setCurrency("eur")
+                                                    .setUnitAmount(amountInCents)
+                                                    .setProductData(
+                                                            SessionCreateParams.LineItem.PriceData.ProductData.builder()
+                                                                    .setName("Carte Cadeau - " + amount + "€")
+                                                                    .setDescription(description)
+                                                                    .build()
+                                                    )
+                                                    .build()
+                                    )
+                                    .setQuantity(1L)
+                                    .build()
+                    )
+                    .putMetadata("gift_card_id", giftCardId)
+                    .putMetadata("customer_email", customerEmail)
+                    .build();
+
+            Session session = Session.create(params);
+            log.info("Created Stripe Checkout Session: {} for gift card: {}", session.getId(), giftCardId);
+
+            return session;
+
+        } catch (StripeException e) {
+            log.error("Failed to create gift card checkout session: {}", e.getMessage(), e);
+            throw new BadRequestException("Failed to create checkout session: " + e.getMessage());
+        }
+    }
+
+    /**
      * Create a payment intent for the given amount in EUR
      */
 

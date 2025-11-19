@@ -1,6 +1,7 @@
 package com.slimbahael.beauty_center.model;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.index.Indexed;
 
@@ -31,6 +32,9 @@ public class GiftCard {
     @Indexed(unique = true)
     @NotBlank
     private String codeHash; // BCrypt hashed code
+
+    @Transient
+    private String code; // Temporary storage for raw code (not persisted)
 
     @Indexed
     @NotBlank

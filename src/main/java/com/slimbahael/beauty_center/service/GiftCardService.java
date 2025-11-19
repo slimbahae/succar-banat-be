@@ -352,4 +352,170 @@ public class GiftCardService {
             log.warn("Failed to record purchase transaction for gift card: {}", giftCardId, e);
         }
     }
+
+    // NEW METHODS FOR STRIPE CHECKOUT FLOW
+
+    /**
+     * Create a pending gift card before payment (for Stripe Checkout)
+     */
+    @Transactional
+    public GiftCard createPendingGiftCard(GiftCardPurchaseRequest request) {
+        // Generate secure code
+        String rawCode = generateSecureCode();
+        String codeHash = passwordEncoder.encode(rawCode);
+
+        // Generate verification token
+        String verificationToken = generateVerificationToken();
+
+        // Calculate expiration date
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.MONTH, EXPIRATION_MONTHS);
+        Date expirationDate = calendar.getTime();
+
+        // Create pending gift card
+        GiftCard giftCard = GiftCard.builder()
+                .codeHash(codeHash)
+                .code(rawCode)  // Store temporarily for Stripe session
+                .type(request.getType())
+                .amount(request.getAmount())
+                .status("PENDING")  // Will be activated after payment
+                .purchaserEmail(request.getPurchaserEmail())
+                .purchaserName(request.getPurchaserName())
+                .recipientEmail(request.getRecipientEmail())
+                .recipientName(request.getRecipientName())
+                .message(request.getMessage())
+                .expirationDate(expirationDate)
+                .verificationToken(verificationToken)
+                .isLocked(false)
+                .redemptionAttempts(0)
+                .verificationAttempts(0)
+                .build();
+
+        giftCard = giftCardRepository.save(giftCard);
+        log.info("Created pending gift card: {} for amount: {}€", giftCard.getId(), request.getAmount());
+
+        return giftCard;
+    }
+
+    /**
+     * Complete gift card purchase after successful Stripe Checkout payment
+     */
+    @Transactional
+    public GiftCard completeGiftCardPurchase(String sessionId) {
+        // Get the Stripe session to retrieve gift card ID from metadata
+        try {
+            com.stripe.model.checkout.Session session = com.stripe.model.checkout.Session.retrieve(sessionId);
+
+            if (!"paid".equals(session.getPaymentStatus())) {
+                throw new BadRequestException("Payment not completed");
+            }
+
+            String giftCardId = session.getMetadata().get("gift_card_id");
+            if (giftCardId == null) {
+                throw new BadRequestException("Gift card ID not found in session");
+            }
+
+            GiftCard giftCard = giftCardRepository.findById(giftCardId)
+                    .orElseThrow(() -> new ResourceNotFoundException("Gift card not found"));
+
+            if (!"PENDING".equals(giftCard.getStatus())) {
+                log.warn("Gift card {} already processed with status: {}", giftCardId, giftCard.getStatus());
+                return giftCard;  // Already processed
+            }
+
+            // Activate the gift card
+            giftCard.setStatus("ACTIVE");
+            giftCard.setPaymentIntentId(session.getPaymentIntent());
+            giftCard = giftCardRepository.save(giftCard);
+
+            // Send confirmation emails
+            try {
+                String code = giftCard.getCode();  // Get the stored code
+                giftCard.setCode(null);  // Clear it from object (still in DB)
+                emailService.sendGiftCardPurchaseConfirmation(
+                        giftCard.getPurchaserEmail(),
+                        giftCard,
+                        code
+                );
+                emailService.sendGiftCardReceived(
+                        giftCard.getRecipientEmail(),
+                        giftCard,
+                        code
+                );
+            } catch (Exception e) {
+                log.error("Failed to send gift card emails: {}", e.getMessage(), e);
+            }
+
+            log.info("Completed gift card purchase: {} - Amount: {}€", giftCard.getId(), giftCard.getAmount());
+            return giftCard;
+
+        } catch (com.stripe.exception.StripeException e) {
+            log.error("Failed to retrieve Stripe session: {}", e.getMessage(), e);
+            throw new BadRequestException("Failed to verify payment: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Verify gift card for use with reservations (not balance)
+     */
+    public GiftCard verifyGiftCardForUse(String code, String userEmail) {
+        Optional<GiftCard> giftCardOpt = findGiftCardByCode(code);
+
+        if (giftCardOpt.isEmpty()) {
+            throw new BadRequestException("Code de carte cadeau invalide");
+        }
+
+        GiftCard giftCard = giftCardOpt.get();
+
+        // Check if card is active
+        if (!"ACTIVE".equals(giftCard.getStatus())) {
+            throw new BadRequestException("Cette carte cadeau n'est plus active");
+        }
+
+        // Check if card is locked
+        if (giftCard.getIsLocked()) {
+            throw new BadRequestException("Cette carte cadeau est bloquée");
+        }
+
+        // Check expiration
+        if (giftCard.getExpirationDate().before(new Date())) {
+            giftCard.setStatus("EXPIRED");
+            giftCardRepository.save(giftCard);
+            throw new BadRequestException("Cette carte cadeau a expiré");
+        }
+
+        // Check if recipient email matches (if specified)
+        if (giftCard.getRecipientEmail() != null &&
+                !giftCard.getRecipientEmail().equalsIgnoreCase(userEmail)) {
+            throw new BadRequestException("Cette carte cadeau est destinée à un autre destinataire");
+        }
+
+        log.info("Gift card {} verified for use by {}", giftCard.getId(), userEmail);
+        return giftCard;
+    }
+
+    /**
+     * Apply gift card to a reservation (reduces reservation cost)
+     */
+    @Transactional
+    public java.util.Map<String, Object> applyGiftCardToReservation(String code, String reservationId, String userEmail) {
+        GiftCard giftCard = verifyGiftCardForUse(code, userEmail);
+
+        // Mark gift card as used
+        giftCard.setStatus("USED");
+        giftCard.setRedeemedByUserId(userEmail);
+        giftCard.setRedeemedAt(new Date());
+        giftCardRepository.save(giftCard);
+
+        java.util.Map<String, Object> result = new java.util.HashMap<>();
+        result.put("success", true);
+        result.put("gift_card_id", giftCard.getId());
+        result.put("amount", giftCard.getAmount());
+        result.put("reservation_id", reservationId);
+        result.put("message", "Carte cadeau appliquée avec succès à la réservation");
+
+        log.info("Applied gift card {} ({}€) to reservation {}", giftCard.getId(), giftCard.getAmount(), reservationId);
+
+        return result;
+    }
 }
