@@ -5,38 +5,67 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Carte cadeau utilisée</title>
     <style>
-        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px; }
-        .header { background: linear-gradient(135deg, #17a2b8 0%, #6f42c1 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
-        .content { background: white; padding: 30px; border: 1px solid #ddd; border-radius: 0 0 10px 10px; }
-        .info { background: #e1f5fe; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #17a2b8; }
-        .amount { font-size: 20px; font-weight: bold; color: #17a2b8; }
-        .footer { text-align: center; margin-top: 30px; font-size: 12px; color: #666; }
+        /* CSS Inlined pour une meilleure compatibilité (MIME) */
+        body, table, td, a { -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
+        table, td { mso-table-lspace: 0pt; mso-table-rspace: 0pt; }
+        img { -ms-interpolation-mode: bicubic; }
+        /* Reset */
+        body { margin: 0; padding: 0; }
+        table { border-spacing: 0; }
+        /* Styles Généraux */
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; line-height: 1.6; color: #374151; background-color: #f9fafb; }
+        a { text-decoration: none; }
+        .ExternalClass { width: 100%; }
+        .ExternalClass, .ExternalClass p, .ExternalClass span, .ExternalClass font, .ExternalClass td, .ExternalClass div { line-height: 100%; }
+        /* Pour les liens souslignés dans Outlook */
+        .appleBody a:link, .appleBody a:hover, .appleBody a:active, .appleBody a:visited { text-decoration: none !important; color: inherit !important; }
+
+        /* Couleurs utilisées : #95511d (Marron Chaud), #633614 (Brun foncé), #FBF4F0 (Clair) */
     </style>
 </head>
-<body>
-<div class="header">
-    <h1>📬 Carte cadeau utilisée</h1>
-    <p>Information sur l'utilisation</p>
-</div>
+<body style="margin: 0; padding: 0; background-color: #f9fafb;">
 
-<div class="content">
-    <p>Bonjour <strong th:text="${giftCard.purchaserName}">Nom</strong>,</p>
+<table border="0" cellpadding="0" cellspacing="0" width="100%" style="border-spacing: 0; background-color: #f9fafb;">
+    <tr>
+        <td align="center" style="padding: 20px 0;">
+            <table border="0" cellpadding="0" cellspacing="0" width="600" style="max-width: 600px; width: 100%; background-color: #ffffff; border-radius: 12px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);">
 
-    <p>Nous vous informons que la carte cadeau que vous avez offerte a été utilisée.</p>
+                <tr>
+                    <td align="center" style="background: #95511d; background-image: linear-gradient(135deg, #a86c3d 0%, #95511d 100%); color: white; padding: 40px 30px; border-top-left-radius: 12px; border-top-right-radius: 12px;">
+                        <h1 style="font-size: 28px; margin: 0 0 8px 0; font-weight: 700;">📬 Carte Cadeau Utilisée</h1>
+                        <p style="color: #f3e9e1; font-size: 14px; margin: 0;">Information sur l'utilisation</p>
+                    </td>
+                </tr>
 
-    <div class="info">
-        <h3>Détails de l'utilisation</h3>
-        <p><strong>Utilisée par:</strong> <span th:text="${giftCard.recipientName}">Destinataire</span></p>
-        <p><strong>Montant:</strong> <span class="amount" th:text="${amount}">50.00€</span></p>
-        <p><strong>Date d'utilisation:</strong> <span th:text="${redemptionDate}">06/07/2024 à 16:30</span></p>
-    </div>
+                <tr>
+                    <td style="padding: 30px; font-size: 15px; color: #374151; background: white; border-bottom-left-radius: 12px; border-bottom-right-radius: 12px;">
 
-    <p>Votre cadeau a fait plaisir! 🎁</p>
+                        <p style="margin: 0 0 16px 0;">Bonjour <strong th:text="${giftCard.purchaserName}">Nom</strong>,</p>
 
-    <div class="footer">
-        <p>Merci de votre générosité,<br>
-            L'équipe <span th:text="${appName}">SuccarBanat</span></p>
-    </div>
-</div>
+                        <p style="margin: 0 0 20px 0;">Nous vous informons que la carte cadeau que vous avez offerte a été utilisée.</p>
+
+                        <div style="background: #FBF4F0; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #95511d;">
+                            <h3 style="font-size: 16px; font-weight: 600; color: #633614; margin: 0 0 12px 0;">Détails de l'utilisation</h3>
+                            <p style="margin: 8px 0; font-size: 14px;"><strong>Utilisée par:</strong> <span th:text="${giftCard.recipientName}">Destinataire</span></p>
+                            <p style="margin: 8px 0; font-size: 14px;"><strong>Montant:</strong> <span style="font-size: 16px; font-weight: bold; color: #95511d;" th:text="${amount}">50.00€</span></p>
+                            <p style="margin: 8px 0 0 0; font-size: 14px;"><strong>Date d'utilisation:</strong> <span th:text="${redemptionDate}">06/07/2024 à 16:30</span></p>
+                        </div>
+
+                        <p style="margin: 20px 0 0 0;">Votre cadeau a fait plaisir! 🎁</p>
+
+                    </td>
+                </tr>
+
+                <tr>
+                    <td align="center" style="padding: 30px; text-align: center; font-size: 13px; color: #6b7280; background-color: #f9fafb; border-top: 1px solid #e5e7eb;">
+                        <p style="margin: 0;">Merci de votre générosité,<br>
+                            L'équipe <span style="color: #95511d; font-weight: 600;" th:text="${appName}">SuccarBanat</span></p>
+                        <p style="margin-top: 16px;">&copy; 2025 <span th:text="${appName}">SuccarBanat</span>. Tous droits réservés.</p>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
 </body>
 </html>

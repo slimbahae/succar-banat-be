@@ -5,46 +5,70 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nouvelle carte cadeau service</title>
     <style>
-        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px; }
-        .header { background: linear-gradient(135deg, #dc3545 0%, #fd7e14 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
-        .content { background: white; padding: 30px; border: 1px solid #ddd; border-radius: 0 0 10px 10px; }
-        .admin-info { background: #f8d7da; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #dc3545; }
-        .amount { font-size: 24px; font-weight: bold; color: #dc3545; }
-        .verification { background: #e2e3e5; padding: 15px; border-radius: 5px; font-family: monospace; font-size: 14px; margin: 15px 0; }
-        .footer { text-align: center; margin-top: 30px; font-size: 12px; color: #666; }
+        /* CSS Inlined pour une meilleure compatibilité (MIME) */
+        body, table, td, a { -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
+        table, td { mso-table-lspace: 0pt; mso-table-rspace: 0pt; }
+        img { -ms-interpolation-mode: bicubic; }
+        /* Reset */
+        body { margin: 0; padding: 0; }
+        table { border-spacing: 0; }
+        /* Styles Généraux */
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; line-height: 1.6; color: #374151; background-color: #f9fafb; }
+        a { text-decoration: none; }
+        .ExternalClass { width: 100%; }
+        .ExternalClass, .ExternalClass p, .ExternalClass span, .ExternalClass font, .ExternalClass td, .ExternalClass div { line-height: 100%; }
     </style>
 </head>
-<body>
-<div class="header">
-    <h1>🎁 Nouvelle carte cadeau service</h1>
-    <p>Action requise</p>
-</div>
+<body style="margin: 0; padding: 0; background-color: #f9fafb;">
 
-<div class="content">
-    <p>Bonjour Admin,</p>
+<table border="0" cellpadding="0" cellspacing="0" width="100%" style="border-spacing: 0; background-color: #f9fafb;">
+    <tr>
+        <td align="center" style="padding: 20px 0;">
+            <table border="0" cellpadding="0" cellspacing="0" width="600" style="max-width: 600px; width: 100%; background-color: #ffffff; border-radius: 12px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);">
 
-    <div class="admin-info">
-        <h3>Nouvelle carte cadeau service créée</h3>
-        <p><strong>Valeur:</strong> <span class="amount" th:text="${amount}">50.00€</span></p>
-        <p><strong>Acheteur:</strong> <span th:text="${giftCard.purchaserName}">Nom</span> (<span th:text="${giftCard.purchaserEmail}">email</span>)</p>
-        <p><strong>Destinataire:</strong> <span th:text="${giftCard.recipientName}">Nom</span> (<span th:text="${giftCard.recipientEmail}">email</span>)</p>
-        <p><strong>Date d'achat:</strong> <span th:text="${purchaseDate}">06/07/2024</span></p>
-        <p><strong>Expire le:</strong> <span th:text="${expirationDate}">06/01/2025</span></p>
-        <p th:if="${giftCard.message}" th:text="'Message: ' + ${giftCard.message}"></p>
-    </div>
+                <tr>
+                    <td align="center" style="background: #95511d; background-image: linear-gradient(135deg, #a86c3d 0%, #95511d 100%); color: white; padding: 40px 30px; border-top-left-radius: 12px; border-top-right-radius: 12px;">
+                        <h1 style="font-size: 28px; margin: 0 0 8px 0; font-weight: 700;">🎁 Nouvelle carte cadeau service</h1>
+                        <p style="color: #f3e9e1; font-size: 14px; margin: 0;">Action requise</p>
+                    </td>
+                </tr>
 
-    <p><strong>Action requise:</strong> Contactez le destinataire pour organiser sa visite.</p>
+                <tr>
+                    <td style="padding: 30px; font-size: 15px; color: #374151; background: white; border-bottom-left-radius: 12px; border-bottom-right-radius: 12px;">
 
-    <div class="verification">
-        <p><strong>Token de vérification:</strong></p>
-        <span th:text="${verificationToken}">TOKEN-123</span>
-    </div>
+                        <p style="margin: 0 0 16px 0;">Bonjour Admin,</p>
 
-    <p>Utilisez ce token pour vérifier la carte cadeau lors de la visite du client.</p>
+                        <div style="background: #FBF4F0; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #95511d;">
+                            <h3 style="font-size: 16px; font-weight: 600; color: #633614; margin: 0 0 12px 0;">Nouvelle carte cadeau service créée</h3>
+                            <p style="margin: 8px 0; font-size: 14px;"><strong>Valeur:</strong> <span style="font-size: 20px; font-weight: bold; color: #95511d;" th:text="${amount}">50.00€</span></p>
+                            <p style="margin: 8px 0; font-size: 14px;"><strong>Acheteur:</strong> <span th:text="${giftCard.purchaserName}">Nom</span> (<span th:text="${giftCard.purchaserEmail}">email</span>)</p>
+                            <p style="margin: 8px 0; font-size: 14px;"><strong>Destinataire:</strong> <span th:text="${giftCard.recipientName}">Nom</span> (<span th:text="${giftCard.recipientEmail}">email</span>)</p>
+                            <p style="margin: 8px 0; font-size: 14px;"><strong>Date d'achat:</strong> <span th:text="${purchaseDate}">06/07/2024</span></p>
+                            <p style="margin: 8px 0; font-size: 14px;"><strong>Expire le:</strong> <span th:text="${expirationDate}">06/01/2025</span></p>
+                            <p th:if="${giftCard.message}" th:text="'Message: ' + ${giftCard.message}" style="margin: 8px 0 0 0; font-size: 14px;"></p>
+                        </div>
 
-    <div class="footer">
-        <p>Système de gestion <span th:text="${appName}">SuccarBanat</span></p>
-    </div>
-</div>
+                        <p style="margin: 20px 0 10px 0;"><strong>Action requise:</strong> Contactez le destinataire pour organiser sa visite.</p>
+
+                        <div style="background: #e2e3e5; padding: 15px; border-radius: 5px; font-family: 'Courier New', monospace; font-size: 14px; margin: 15px 0;">
+                            <p style="margin: 0 0 5px 0;"><strong>Token de vérification:</strong></p>
+                            <span style="word-break: break-all;" th:text="${verificationToken}">TOKEN-123</span>
+                        </div>
+
+                        <p style="margin: 0;">Utilisez ce token pour vérifier la carte cadeau lors de la visite du client.</p>
+
+                    </td>
+                </tr>
+
+                <tr>
+                    <td align="center" style="padding: 30px; text-align: center; font-size: 13px; color: #6b7280; background-color: #f9fafb; border-top: 1px solid #e5e7eb;">
+                        <p style="margin: 0;">Système de gestion <span style="color: #95511d; font-weight: 600;" th:text="${appName}">SuccarBanat</span></p>
+                        <p style="margin-top: 4px;">Ce courriel est un avis automatisé.</p>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
 </body>
 </html>

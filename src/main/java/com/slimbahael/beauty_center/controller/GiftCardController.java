@@ -181,6 +181,13 @@ public class GiftCardController {
     }
 
     // Admin endpoints
+
+    @GetMapping("/admin/gift-cards")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<GiftCard>> getAllGiftCards() {
+        return ResponseEntity.ok(giftCardService.getAllGiftCards());
+    }
+
     @PostMapping("/admin/gift-cards/verify-code")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Map<String, Object>> verifyGiftCardByCode(

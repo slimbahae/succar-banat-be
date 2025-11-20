@@ -240,6 +240,13 @@ public class GiftCardService {
         return giftCardRepository.findByRecipientEmailOrderByCreatedAtDesc(email);
     }
 
+    /**
+     * Get all gift cards for admin view
+     */
+    public List<GiftCard> getAllGiftCards() {
+        return giftCardRepository.findAll();
+    }
+
     public GiftCard getGiftCardByPaymentIntent(String paymentIntentId) {
         List<GiftCard> giftCards = giftCardRepository.findByPaymentIntentId(paymentIntentId);
         if (giftCards.isEmpty()) {

@@ -3,81 +3,94 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Confirmation d'achat - Carte Cadeau</title>
+    <title>Confirmation d'Achat - Carte Cadeau</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; line-height: 1.6; color: #374151; background-color: #f9fafb; padding: 20px; }
-        .email-wrapper { max-width: 600px; margin: 0 auto; }
-        .email-container { background-color: #ffffff; border-radius: 12px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07); overflow: hidden; }
-        .header { background: linear-gradient(135deg, #ec4899 0%, #be185d 100%); color: white; padding: 40px 30px; text-align: center; }
-        .header h1 { font-size: 28px; margin-bottom: 8px; }
-        .header p { color: #fce7f3; font-size: 14px; }
-        .content { padding: 40px 30px; }
-        .gift-card-box { background: linear-gradient(135deg, #ec4899 0%, #be185d 100%); padding: 30px; border-radius: 12px; margin: 24px 0; color: white; text-align: center; }
-        .amount { font-size: 48px; font-weight: 700; margin: 16px 0; }
-        .gift-label { font-size: 14px; opacity: 0.9; }
-        .details-box { background-color: #fdf2f8; border-left: 4px solid #ec4899; padding: 20px; border-radius: 8px; margin: 24px 0; }
-        .details-box h3 { color: #be185d; margin-bottom: 12px; font-size: 16px; }
-        .details-box p { margin: 8px 0; font-size: 14px; }
-        .details-box strong { color: #111827; }
-        .code-box { background-color: #fce7f3; padding: 20px; border-radius: 8px; text-align: center; margin: 24px 0; }
-        .code-box p { font-size: 12px; color: #6b7280; margin-bottom: 8px; }
-        .code { font-family: 'Courier New', monospace; font-size: 18px; font-weight: 700; color: #be185d; letter-spacing: 2px; word-break: break-all; }
-        .info-box { background-color: #dbeafe; border-left: 4px solid #3b82f6; padding: 16px; border-radius: 8px; margin: 24px 0; }
-        .info-box p { font-size: 14px; color: #1e40af; margin: 0; }
-        .button { display: inline-block; background: linear-gradient(135deg, #ec4899 0%, #be185d 100%); color: #ffffff !important; padding: 14px 32px; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 15px; margin: 20px 0; }
-        .footer { background-color: #f9fafb; padding: 30px; text-align: center; border-top: 1px solid #e5e7eb; }
-        .footer p { color: #6b7280; font-size: 13px; margin: 4px 0; }
-        .footer-brand { color: #ec4899; font-weight: 600; }
+        /* CSS Inlined pour une meilleure compatibilité (MIME) */
+        body, table, td, a { -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
+        table, td { mso-table-lspace: 0pt; mso-table-rspace: 0pt; }
+        img { -ms-interpolation-mode: bicubic; }
+        /* Reset */
+        body { margin: 0; padding: 0; }
+        table { border-spacing: 0; }
+        /* Styles Généraux */
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; line-height: 1.6; color: #374151; background-color: #f9fafb; }
+        a { text-decoration: none; }
+        .ExternalClass { width: 100%; }
+        .ExternalClass, .ExternalClass p, .ExternalClass span, .ExternalClass font, .ExternalClass td, .ExternalClass div { line-height: 100%; }
+        /* Pour les liens souslignés dans Outlook */
+        .appleBody a:link, .appleBody a:hover, .appleBody a:active, .appleBody a:visited { text-decoration: none !important; color: inherit !important; }
+
+        /* Couleurs : #95511d (principal) et #633614 (foncé) */
     </style>
 </head>
-<body>
-<div class="email-wrapper">
-    <div class="email-container">
-        <div class="header">
-            <h1>Confirmation d'Achat</h1>
-            <p>Votre carte cadeau a ete creee avec succes</p>
-        </div>
+<body style="margin: 0; padding: 0; background-color: #f9fafb;">
 
-        <div class="content">
-            <p>Bonjour <strong th:text="${giftCard.purchaserName}">Nom</strong>,</p>
+<table border="0" cellpadding="0" cellspacing="0" width="100%" style="border-spacing: 0; background-color: #f9fafb;">
+    <tr>
+        <td align="center" style="padding: 20px 0;">
+            <table border="0" cellpadding="0" cellspacing="0" width="600" class="email-container" style="max-width: 600px; width: 100%; background-color: #ffffff; border-radius: 12px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);">
+                <tr>
+                    <td align="center" style="background: #95511d; background-image: linear-gradient(135deg, #a86c3d 0%, #95511d 100%); color: white; padding: 40px 30px; border-top-left-radius: 12px; border-top-right-radius: 12px;">
+                        <h1 style="font-size: 28px; margin: 0 0 8px 0; font-weight: 700;">Confirmation d'Achat</h1>
+                        <p style="color: #f3e9e1; font-size: 14px; margin: 0;">Votre carte cadeau a été créée avec succès</p>
+                    </td>
+                </tr>
 
-            <p style="margin-top: 16px;">Merci pour votre achat ! Votre carte cadeau a ete creee et envoyee a <strong th:text="${giftCard.recipientName}">Destinataire</strong>.</p>
+                <tr>
+                    <td style="padding: 40px 30px; font-size: 15px; color: #374151;">
+                        <p style="margin: 0;">Bonjour <strong th:text="${giftCard.purchaserName}">Nom</strong>,</p>
 
-            <div class="gift-card-box">
-                <p class="gift-label">Carte Cadeau</p>
-                <p class="amount" th:text="${amount}">50.00EUR</p>
-                <p class="gift-label">Pour Reservations de Services</p>
-            </div>
+                        <p style="margin-top: 16px;">Merci pour votre achat ! Votre carte cadeau a été créée et envoyée à <strong th:text="${giftCard.recipientName}">Destinataire</strong>.</p>
 
-            <div class="details-box">
-                <h3>Details de la carte cadeau</h3>
-                <p><strong>Destinataire:</strong> <span th:text="${giftCard.recipientName}">Destinataire</span></p>
-                <p><strong>Email:</strong> <span th:text="${giftCard.recipientEmail}">email@example.com</span></p>
-                <p><strong>Date d'expiration:</strong> <span th:text="${expirationDate}">31/12/2024</span></p>
-                <p th:if="${giftCard.message}"><strong>Votre message:</strong> <span th:text="${giftCard.message}"></span></p>
-            </div>
+                        <table border="0" cellpadding="0" cellspacing="0" width="100%" style="border-spacing: 0; background: #95511d; background-image: linear-gradient(135deg, #a86c3d 0%, #95511d 100%); padding: 30px; border-radius: 12px; margin: 24px 0; color: white; text-align: center;">
+                            <tr>
+                                <td align="center">
+                                    <p style="font-size: 14px; opacity: 0.9; margin: 0;">Carte Cadeau</p>
+                                    <p style="font-size: 48px; font-weight: 700; margin: 16px 0;" th:text="${amount}">50.00EUR</p>
+                                    <p style="font-size: 14px; opacity: 0.9; margin: 0;">Pour Réservations de Services</p>
+                                </td>
+                            </tr>
+                        </table>
 
-            <div class="code-box">
-                <p>CODE DE LA CARTE CADEAU</p>
-                <span class="code" th:text="${code}">XXXX-XXXX-XXXX</span>
-            </div>
+                        <div style="background-color: #FBF4F0; border-left: 4px solid #95511d; padding: 20px; border-radius: 8px; margin: 24px 0;">
+                            <h3 style="color: #633614; margin: 0 0 12px 0; font-size: 16px; font-weight: 600;">Détails de la carte cadeau</h3>
+                            <p style="margin: 8px 0; font-size: 14px;"><strong>Destinataire:</strong> <span th:text="${giftCard.recipientName}">Destinataire</span></p>
+                            <p style="margin: 8px 0; font-size: 14px;"><strong>Email:</strong> <span th:text="${giftCard.recipientEmail}">email@example.com</span></p>
+                            <p style="margin: 8px 0; font-size: 14px;"><strong>Date d'expiration:</strong> <span th:text="${expirationDate}">31/12/2024</span></p>
+                            <p th:if="${giftCard.message}" style="margin: 8px 0 0 0; font-size: 14px;"><strong>Votre message:</strong> <span th:text="${giftCard.message}"></span></p>
+                        </div>
 
-            <div class="info-box">
-                <p><strong>Important:</strong> Cette carte cadeau est valable uniquement pour les prises de rendez-vous et reservations de services dans notre centre de beaute. Elle ne peut pas etre convertie en solde.</p>
-            </div>
+                        <div style="background-color: #F4E8E0; padding: 20px; border-radius: 8px; text-align: center; margin: 24px 0;">
+                            <p style="font-size: 12px; color: #6b7280; margin: 0 0 8px 0;">CODE DE LA CARTE CADEAU</p>
+                            <span style="font-family: 'Courier New', monospace; font-size: 18px; font-weight: 700; color: #633614; letter-spacing: 2px; word-break: break-all;" th:text="${code}">XXXX-XXXX-XXXX</span>
+                        </div>
 
-            <div style="text-align: center;">
-                <a th:href="${frontendUrl}" class="button">Visiter notre site</a>
-            </div>
-        </div>
+                        <div style="background-color: #dbeafe; border-left: 4px solid #3b82f6; padding: 16px; border-radius: 8px; margin: 24px 0;">
+                            <p style="font-size: 14px; color: #1e40af; margin: 0;"><strong>Important:</strong> Cette carte cadeau est valable uniquement pour les prises de rendez-vous et réservations de services dans notre centre de beauté.</p>
+                        </div>
 
-        <div class="footer">
-            <p>Merci de votre confiance !</p>
-            <p>L'equipe <span class="footer-brand" th:text="${businessName}">Succar Banat</span></p>
-            <p style="margin-top: 16px;">© 2024 <span th:text="${businessName}">Succar Banat</span>. Tous droits reserves.</p>
-        </div>
-    </div>
-</div>
+                        <table border="0" cellpadding="0" cellspacing="0" width="100%" style="border-spacing: 0;">
+                            <tr>
+                                <td align="center" style="padding: 20px 0;">
+                                    <a th:href="${frontendUrl}" target="_blank" style="display: inline-block; background: #95511d; background-image: linear-gradient(135deg, #a86c3d 0%, #95511d 100%); color: #ffffff !important; padding: 14px 32px; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 15px;">
+                                        Visiter notre site
+                                    </a>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td align="center" style="background-color: #f9fafb; padding: 30px; border-top: 1px solid #e5e7eb; border-bottom-left-radius: 12px; border-bottom-right-radius: 12px;">
+                        <p style="color: #6b7280; font-size: 13px; margin: 4px 0;">Merci de votre confiance !</p>
+                        <p style="color: #6b7280; font-size: 13px; margin: 4px 0;">L'équipe <span style="color: #95511d; font-weight: 600;" th:text="${businessName}">Succar Banat</span></p>
+                        <p style="color: #6b7280; font-size: 13px; margin-top: 16px;">&copy; 2025 <span th:text="${businessName}">Succar Banat</span>. Tous droits réservés.</p>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
 </body>
 </html>
