@@ -28,6 +28,7 @@ public class EmailService {
 
     private final JavaMailSender mailSender;
     private final TemplateEngine templateEngine;
+    private final BrevoEmailService brevoEmailService;
 
     @Value("${app.business.email}")
     private String fromEmail;
@@ -476,27 +477,16 @@ public class EmailService {
 
     private void sendHtmlEmail(String to, String subject, String htmlContent) {
         try {
-            MimeMessage message = mailSender.createMimeMessage();
-            MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
-
-            helper.setFrom(businessEmail, businessName);
-            helper.setTo(to);
-            helper.setSubject(subject);
-            helper.setText(htmlContent, true);
-
-            mailSender.send(message);
-        } catch (MessagingException e) {
+            // Use Brevo API instead of SMTP
+            brevoEmailService.sendEmail(to, to, subject, htmlContent);
+        } catch (Exception e) {
+            log.error("Failed to send email to: {}", to, e);
             throw new RuntimeException("Failed to send email", e);
-        } catch (UnsupportedEncodingException e) {
-            throw new RuntimeException(e);
         }
     }
 
     private void sendTemplatedEmail(String toEmail, String subject, String templateName, Context context) {
         try {
-            MimeMessage message = mailSender.createMimeMessage();
-            MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
-
             // Process the specific template content
             String emailContent = templateEngine.process(templateName, context);
 
@@ -509,15 +499,11 @@ public class EmailService {
             // Process the base template with content
             String finalHtml = templateEngine.process("base-email", baseContext);
 
-            helper.setTo(toEmail);
-            helper.setFrom(fromEmail);
-            helper.setSubject(subject);
-            helper.setText(finalHtml, true);
-
-            mailSender.send(message);
+            // Use Brevo API instead of SMTP
+            brevoEmailService.sendEmail(toEmail, toEmail, subject, finalHtml);
             log.info("Templated email sent to: {} with subject: {}", toEmail, subject);
 
-        } catch (MessagingException e) {
+        } catch (Exception e) {
             log.error("Failed to send templated email to: {}", toEmail, e);
             throw new RuntimeException("Failed to send email");
         }
