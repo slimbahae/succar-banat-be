@@ -180,8 +180,13 @@ public class GiftCardService {
     }
 
     public GiftCard verifyGiftCardForAdmin(String code) {
-        // Find gift card by code
-        Optional<GiftCard> giftCardOpt = findGiftCardByCode(code);
+        // Try to find by verification token first (for admin use)
+        Optional<GiftCard> giftCardOpt = giftCardRepository.findByVerificationToken(code);
+
+        // If not found by token, try to find by hashed code
+        if (giftCardOpt.isEmpty()) {
+            giftCardOpt = findGiftCardByCode(code);
+        }
 
         if (giftCardOpt.isEmpty()) {
             throw new ResourceNotFoundException("Code de carte cadeau invalide");
