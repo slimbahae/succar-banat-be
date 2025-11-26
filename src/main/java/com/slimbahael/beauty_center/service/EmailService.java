@@ -311,7 +311,7 @@ public class EmailService {
         try {
             Context context = new Context(Locale.FRANCE);
             context.setVariable("giftCard", giftCard);
-            context.setVariable("code", code);
+            context.setVariable("token", code);
             context.setVariable("businessName", businessName);
             context.setVariable("frontendUrl", frontendUrl);
             context.setVariable("expirationDate", dateFormat.format(giftCard.getExpirationDate()));
@@ -339,8 +339,8 @@ public class EmailService {
             context.setVariable("isBalanceType", "BALANCE".equals(giftCard.getType()));
             context.setVariable("isServiceType", "SERVICE".equals(giftCard.getType()));
 
-            // Set code for both BALANCE and SERVICE types
-            context.setVariable("code", code);
+            // Set token for both BALANCE and SERVICE types
+            context.setVariable("token", code);
 
             String htmlContent = templateEngine.process("gift-card-received", context);
             String subject = "🎁 Vous avez reçu une carte cadeau " + businessName;
