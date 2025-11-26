@@ -66,6 +66,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/reviews/**").permitAll()
                         .requestMatchers("/api/public/**").permitAll()
                         .requestMatchers("/api/files/products/**").permitAll()
+                        .requestMatchers("/api/admin/test-email").permitAll()
                         .requestMatchers("/v2/api-docs", "/swagger*/**", "/webjars/**").permitAll()
                         .requestMatchers("/api/admin/**").hasAuthority("ROLE_ADMIN")
                         .requestMatchers("/api/staff/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_STAFF")

@@ -3,6 +3,7 @@ package com.slimbahael.beauty_center.controller;
 import com.slimbahael.beauty_center.dto.CreateUserRequest;
 import com.slimbahael.beauty_center.dto.UpdateUserRequest;
 import com.slimbahael.beauty_center.dto.UserResponse;
+import com.slimbahael.beauty_center.service.EmailService;
 import com.slimbahael.beauty_center.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import jakarta.validation.Valid;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/admin")
@@ -20,6 +22,7 @@ import java.util.List;
 public class AdminController {
 
     private final UserService userService;
+    private final EmailService emailService;
 
     @GetMapping("/users")
     @PreAuthorize("hasRole('ADMIN')")
@@ -58,5 +61,22 @@ public class AdminController {
     public ResponseEntity<Void> deleteUser(@PathVariable String id) {
         userService.deleteUser(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/test-email")
+    public ResponseEntity<Map<String, String>> sendTestEmail(@RequestParam String email) {
+        try {
+            emailService.sendWelcomeEmail(email, "Test User");
+            return ResponseEntity.ok(Map.of(
+                "message", "Test email sent successfully to " + email,
+                "status", "success"
+            ));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(Map.of(
+                    "message", "Failed to send test email: " + e.getMessage(),
+                    "status", "error"
+                ));
+        }
     }
 }
