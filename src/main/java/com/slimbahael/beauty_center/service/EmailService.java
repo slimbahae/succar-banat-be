@@ -339,12 +339,8 @@ public class EmailService {
             context.setVariable("isBalanceType", "BALANCE".equals(giftCard.getType()));
             context.setVariable("isServiceType", "SERVICE".equals(giftCard.getType()));
 
-            // Set code for BALANCE type and token for SERVICE type
-            if ("BALANCE".equals(giftCard.getType())) {
-                context.setVariable("code", code);
-            } else if ("SERVICE".equals(giftCard.getType())) {
-                context.setVariable("token", giftCard.getId()); // Use the ID as token
-            }
+            // Set code for both BALANCE and SERVICE types
+            context.setVariable("code", code);
 
             String htmlContent = templateEngine.process("gift-card-received", context);
             String subject = "🎁 Vous avez reçu une carte cadeau " + businessName;
