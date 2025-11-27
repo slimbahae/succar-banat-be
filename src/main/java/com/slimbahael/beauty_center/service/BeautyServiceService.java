@@ -7,18 +7,22 @@ import com.slimbahael.beauty_center.model.Service;
 import com.slimbahael.beauty_center.repository.ServiceRepository;
 import com.slimbahael.beauty_center.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @org.springframework.stereotype.Service
 @RequiredArgsConstructor
+@Slf4j
 public class BeautyServiceService {
 
     private final ServiceRepository serviceRepository;
     private final UserRepository userRepository;
+    private final CloudinaryService cloudinaryService;
 
     public List<ServiceResponse> getAllServices() {
         return serviceRepository.findAll()
@@ -88,12 +92,40 @@ public class BeautyServiceService {
         // Validate assigned staff IDs
         validateStaffIds(serviceRequest.getAssignedStaffIds());
 
+        // Get old image URLs for comparison
+        List<String> oldImageUrls = existingService.getImageUrls() != null
+                ? new ArrayList<>(existingService.getImageUrls())
+                : new ArrayList<>();
+        List<String> newImageUrls = serviceRequest.getImageUrls() != null
+                ? serviceRequest.getImageUrls()
+                : new ArrayList<>();
+
+        // Find images that were removed (in old but not in new)
+        List<String> removedImages = oldImageUrls.stream()
+                .filter(oldUrl -> !newImageUrls.contains(oldUrl))
+                .collect(Collectors.toList());
+
+        // Delete removed images from Cloudinary
+        if (!removedImages.isEmpty()) {
+            log.info("Deleting {} removed images from Cloudinary for service: {}",
+                    removedImages.size(), existingService.getName());
+            for (String imageUrl : removedImages) {
+                try {
+                    cloudinaryService.deleteImage(imageUrl);
+                    log.info("Successfully deleted image: {}", imageUrl);
+                } catch (Exception e) {
+                    log.error("Failed to delete image from Cloudinary: {}", imageUrl, e);
+                    // Continue with other deletions even if one fails
+                }
+            }
+        }
+
         existingService.setName(serviceRequest.getName());
         existingService.setDescription(serviceRequest.getDescription());
         existingService.setCategory(serviceRequest.getCategory());
         existingService.setPrice(serviceRequest.getPrice());
         existingService.setDuration(serviceRequest.getDuration());
-        existingService.setImageUrls(serviceRequest.getImageUrls());
+        existingService.setImageUrls(newImageUrls);
         existingService.setAssignedStaffIds(serviceRequest.getAssignedStaffIds());
         existingService.setFeatured(serviceRequest.isFeatured());
         existingService.setActive(serviceRequest.isActive());
@@ -109,10 +141,27 @@ public class BeautyServiceService {
     }
 
     public void deleteService(String id) {
-        if (!serviceRepository.existsById(id)) {
-            throw new ResourceNotFoundException("Service not found with id: " + id);
+        Service service = serviceRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Service not found with id: " + id));
+
+        // Delete all service images from Cloudinary before deleting the service
+        List<String> imageUrls = service.getImageUrls();
+        if (imageUrls != null && !imageUrls.isEmpty()) {
+            log.info("Deleting {} images from Cloudinary for service: {}",
+                    imageUrls.size(), service.getName());
+            for (String imageUrl : imageUrls) {
+                try {
+                    cloudinaryService.deleteImage(imageUrl);
+                    log.info("Successfully deleted image: {}", imageUrl);
+                } catch (Exception e) {
+                    log.error("Failed to delete image from Cloudinary: {}", imageUrl, e);
+                    // Continue with other deletions even if one fails
+                }
+            }
         }
+
         serviceRepository.deleteById(id);
+        log.info("Successfully deleted service: {}", service.getName());
     }
 
     // Helper method to validate staff IDs
