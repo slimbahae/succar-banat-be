@@ -180,15 +180,23 @@ public class GiftCardService {
     }
 
     public GiftCard verifyGiftCardForAdmin(String code) {
+        // Trim whitespace
+        code = code != null ? code.trim() : "";
+        log.info("Attempting to verify gift card with code/token: '{}'", code);
+
         // Try to find by verification token first (for admin use)
         Optional<GiftCard> giftCardOpt = giftCardRepository.findByVerificationToken(code);
+        log.info("Search by verification token result: {}", giftCardOpt.isPresent() ? "Found" : "Not found");
 
         // If not found by token, try to find by hashed code
         if (giftCardOpt.isEmpty()) {
+            log.info("Trying to find by hashed code...");
             giftCardOpt = findGiftCardByCode(code);
+            log.info("Search by hashed code result: {}", giftCardOpt.isPresent() ? "Found" : "Not found");
         }
 
         if (giftCardOpt.isEmpty()) {
+            log.warn("Gift card not found with provided code/token");
             throw new ResourceNotFoundException("Code de carte cadeau invalide");
         }
 
