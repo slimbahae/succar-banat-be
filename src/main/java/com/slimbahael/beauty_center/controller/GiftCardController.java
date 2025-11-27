@@ -213,7 +213,11 @@ public class GiftCardController {
             response.put("message", "Carte cadeau valide");
 
             return ResponseEntity.ok(response);
+        } catch (ResourceNotFoundException | BadRequestException e) {
+            // Re-throw specific exceptions as-is
+            throw e;
         } catch (Exception e) {
+            log.error("Unexpected error verifying gift card: ", e);
             throw new BadRequestException("Carte cadeau invalide ou expirée");
         }
     }
