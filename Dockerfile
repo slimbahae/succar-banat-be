@@ -1,13 +1,8 @@
-# Use Eclipse Temurin (recommended OpenJDK distribution) as base image
-FROM eclipse-temurin:17-jdk-jammy
+# Multi-stage build for smaller final image
+# Stage 1: Build stage
+FROM maven:3.9-eclipse-temurin-17 AS build
 
-# Set working directory
 WORKDIR /app
-
-# Install Maven
-RUN apt-get update && \
-    apt-get install -y maven && \
-    rm -rf /var/lib/apt/lists/*
 
 # Copy pom.xml first for dependency caching
 COPY pom.xml .
@@ -21,16 +16,20 @@ COPY src ./src
 # Build the application
 RUN mvn clean package -DskipTests
 
+# Stage 2: Runtime stage
+FROM eclipse-temurin:17-jre-jammy
+
+WORKDIR /app
+
+# Copy the built jar from build stage
+COPY --from=build /app/target/beauty-center-*.jar app.jar
+
 # Create uploads directory for file uploads
 RUN mkdir -p /app/uploads
-
-# Cloud Run will provide PORT environment variable (default: 8080)
-# No need to EXPOSE as Cloud Run ignores it
 
 # Set production profile
 ENV SPRING_PROFILES_ACTIVE=prod
 ENV FILE_UPLOAD_DIR=/app/uploads
 
-# Run the jar file
-# Use shell form to expand wildcard
-CMD java -Xmx512m -Xms256m -jar target/beauty-center-*.jar
+# Run the application
+CMD ["java", "-Xmx512m", "-Xms256m", "-jar", "app.jar"]
