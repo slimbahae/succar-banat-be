@@ -32,7 +32,7 @@
         <p><strong>Montant:</strong> <span class="amount" th:text="${amount}">50.00€</span></p>
         <p><strong>Type:</strong> <span th:text="${giftCard.type == 'BALANCE' ? 'Solde' : 'Service'}">Type</span></p>
         <p><strong>Offerte par:</strong> <span th:text="${giftCard.purchaserName}">Acheteur</span></p>
-        <p><strong>Expire le:</strong> <span th:text="${expirationDate}">31/12/2024</span></p>
+        <p><strong>Expire le:</strong> <span th:text="${expirationDate}">31/12/2025</span></p>
         <p th:if="${giftCard.message}" th:text="'Message: ' + ${giftCard.message}"></p>
     </div>
 
