@@ -25,6 +25,7 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final EmailService emailService;
     private final RatingService ratingService;
+    private final CloudinaryService cloudinaryService;
 
     public List<ProductResponse> getAllProducts() {
         return productRepository.findAll()
@@ -122,12 +123,40 @@ public class ProductService {
         Product existingProduct = productRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Product not found with id: " + id));
 
+        // Get old image URLs for comparison
+        List<String> oldImageUrls = existingProduct.getImageUrls() != null
+                ? new ArrayList<>(existingProduct.getImageUrls())
+                : new ArrayList<>();
+        List<String> newImageUrls = productRequest.getImageUrls() != null
+                ? productRequest.getImageUrls()
+                : new ArrayList<>();
+
+        // Find images that were removed (in old but not in new)
+        List<String> removedImages = oldImageUrls.stream()
+                .filter(oldUrl -> !newImageUrls.contains(oldUrl))
+                .collect(Collectors.toList());
+
+        // Delete removed images from Cloudinary
+        if (!removedImages.isEmpty()) {
+            log.info("Deleting {} removed images from Cloudinary for product: {}",
+                    removedImages.size(), existingProduct.getName());
+            for (String imageUrl : removedImages) {
+                try {
+                    cloudinaryService.deleteImage(imageUrl);
+                    log.info("Successfully deleted image: {}", imageUrl);
+                } catch (Exception e) {
+                    log.error("Failed to delete image from Cloudinary: {}", imageUrl, e);
+                    // Continue with other deletions even if one fails
+                }
+            }
+        }
+
         existingProduct.setName(productRequest.getName());
         existingProduct.setDescription(productRequest.getDescription());
         existingProduct.setCategory(productRequest.getCategory());
         existingProduct.setPrice(productRequest.getPrice());
         existingProduct.setStockQuantity(productRequest.getStockQuantity());
-        existingProduct.setImageUrls(productRequest.getImageUrls());
+        existingProduct.setImageUrls(newImageUrls);
         existingProduct.setTags(productRequest.getTags());
         existingProduct.setBrand(productRequest.getBrand());
         existingProduct.setSku(productRequest.getSku());
@@ -168,10 +197,27 @@ public class ProductService {
     }
 
     public void deleteProduct(String id) {
-        if (!productRepository.existsById(id)) {
-            throw new ResourceNotFoundException("Product not found with id: " + id);
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Product not found with id: " + id));
+
+        // Delete all product images from Cloudinary before deleting the product
+        List<String> imageUrls = product.getImageUrls();
+        if (imageUrls != null && !imageUrls.isEmpty()) {
+            log.info("Deleting {} images from Cloudinary for product: {}",
+                    imageUrls.size(), product.getName());
+            for (String imageUrl : imageUrls) {
+                try {
+                    cloudinaryService.deleteImage(imageUrl);
+                    log.info("Successfully deleted image: {}", imageUrl);
+                } catch (Exception e) {
+                    log.error("Failed to delete image from Cloudinary: {}", imageUrl, e);
+                    // Continue with other deletions even if one fails
+                }
+            }
         }
+
         productRepository.deleteById(id);
+        log.info("Successfully deleted product: {}", product.getName());
     }
 
     // 🔥 NEW: Add method to check all products for low stock (can be called by scheduler)
